@@ -1,4 +1,4 @@
-//柯里化
+### 柯里化
 `
 function test(m){
     return function(n){
@@ -10,7 +10,7 @@ console.log(n)
 `
 
 
-//js 链式调用
+### js 链式调用
 `
 function add(n) {
   var fn = function(m) {
