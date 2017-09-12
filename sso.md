@@ -1,13 +1,15 @@
+## 单点登录原理
+
 /**
  user <=>  sso  全局会话
  system <=> user 局部会话
  system <=> sso 局部会话
  
-user -> system1(protected->unlogin) -> sso(checked->unlogin) -> loginPage
-signin-> sso(checked->token) ->system1(token) -> sso(checked->ok) -> pass
+user -> system1(protected->unlogin?地址) -> sso(validate->unlogin) -> loginPage &&
+signin-> sso(validate->token) ->system1(token) -> sso(validate->ok) -> pass
 
-user -> system2(protected->unlogin) -> sso(checked->logined) -> 
-system2(token) -> sso(checked->ok) -> pass
+user -> system2(protected->unlogin?地址) -> sso(validate->logined) -> 
+system2(token) -> sso(validate->ok) -> pass
 
 **/
 
