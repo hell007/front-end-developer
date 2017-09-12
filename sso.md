@@ -11,6 +11,11 @@ signin-> [sso(validate->token) ->system1(token) -> sso(validate->ok)] -> pass
 user -> system2(protected->unlogin?地址) -> sso(validate->logined) -> 
 [system2(token) -> sso(validate->ok)] -> pass
 
+
+String callbackURL = request.getRequestURL().toString();
+StringBuilder url = new StringBuilder();
+url.append(SSO_SERVER_URL).append("?callbackURL=").append(callbackURL);
+response.sendRedirect(url.toString());
 **/
 
 /**
