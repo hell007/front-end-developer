@@ -6,10 +6,10 @@
  system <=> sso 局部会话
  
 user -> system1(protected->unlogin?地址) -> sso(validate->unlogin) -> loginPage &&
-signin-> sso(validate->token) ->system1(token) -> sso(validate->ok) -> pass
+signin-> [sso(validate->token) ->system1(token) -> sso(validate->ok)] -> pass
 
 user -> system2(protected->unlogin?地址) -> sso(validate->logined) -> 
-system2(token) -> sso(validate->ok) -> pass
+[system2(token) -> sso(validate->ok)] -> pass
 
 **/
 
