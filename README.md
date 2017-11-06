@@ -10,7 +10,7 @@
 
 [柯里化](./js柯里化.md)
 
-[promise-async/await-fetch](./promise-async/await-fetc.md)
+[promise-async/await-fetch](./promise-async-await-fetch.md)
 
 #### JAVA笔记
 
