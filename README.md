@@ -6,11 +6,11 @@
 
 [web前端图片极限优化策略](./web前端图片极限优化策略.md)
 
-[Js的性能优化 加载和执行](./JavaScript 的性能优化-加载和执行.md)
+[Js的性能优化加载和执行](./JavaScript 的性能优化-加载和执行.md0
 
 [柯里化](./js柯里化.md)
 
-[promise async await fetch](./promise async await fetch.md)
+[promise-async/await-fetch](./promise async await fetch.md)
 
 #### JAVA笔记
 
