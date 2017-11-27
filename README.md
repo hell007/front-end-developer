@@ -16,6 +16,8 @@
 
 [springmvc-token.md](./springmvc-token.md)
 
+[Mysql解压缩版配置安装](./Mysql解压缩版配置安装.md)
+
 [sso](./sso.md)
 
 #### 构建工具与其他
