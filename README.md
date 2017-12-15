@@ -33,3 +33,14 @@
 [makedown笔记](./md-note.md)
 
 [git使用](./git-note.md)
+
+
+#### 其他文档
+
+[前端开发规范手册](https://segmentfault.com/a/1190000003869960)
+
+[rax](https://alibaba.github.io/rax/guide/getting-started)
+
+
+
+
