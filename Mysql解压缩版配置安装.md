@@ -48,3 +48,17 @@ update user set authentication_string=password('admin') where user='root';
 flush privileges;
 exit
 至此，Mysql 5.7.19 winx64 解压缩版配置安装已经完成！祝您成功！
+
+
+## cmd操作mysql
+
+1.mysql服务的启动和停止
+
+	net stop mysql
+ 	net start mysql
+
+2.登陆
+
+	mysql –u root -p
+
+
