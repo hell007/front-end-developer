@@ -24,7 +24,7 @@
 
 [sql学习](./sql.md)
 
-## 算法与数据结构
+#### 算法与数据结构
 
 ![《算法与数据结构》实战教程-JavaScript版本](https://github.com/sinner77/play-with-algorithm)
 
