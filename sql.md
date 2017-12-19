@@ -244,7 +244,7 @@ MYSQL、Oracle、DB2 变向实现集合匹配
 
 mysql 
  
- >  <  <> => (!=)
+ < 、 > 、 <> => (!=)
 
 	SELECT * FROM T_EMP WHERE FAGE <> 22 AND FSALARY >= 2000
 
