@@ -335,7 +335,7 @@ IN
 
 HAVING  VS  WHERE
 
-是否使用未分组的列名（ group by 列名 ）
+是否使用未分组的列名（ group by 产生的结果集的列 ）
 
 
 ## 限制结果集行数 
