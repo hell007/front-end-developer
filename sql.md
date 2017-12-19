@@ -651,6 +651,10 @@ MYSQL,Oracle
 
 	SELECT FName, INSTR(FName,'m') , INSTR(FName,'ly') FROM T_Person
 
+查询手机号码，中间四位为 * 替换
+	
+	SELECT FNAME,INSERT(FPHONE,4,4,'****') FROM T_PERSON
+
 7.从左\右侧开始取子字符串
 
 LEFT (string,length) 其中参数 string 为主字符串，length 为子字符串的最大长
