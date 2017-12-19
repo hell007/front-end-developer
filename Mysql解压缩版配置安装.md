@@ -5,30 +5,30 @@
 2、在 D:\MySQL\ 目录下新建 my.ini 配置文件；
 3、用文本编辑器或其他编辑器打开 my.ini 文件，把以下代码复制粘贴进去，保存退出；
 
-#代码开始
+**-----代码开始-----**
 [Client]
-#设置3306端口
+##### 设置3306端口
 port = 3306
  
 [mysqld]
-#设置3306端口
+##### 设置3306端口
 port = 3306
-# 设置mysql的安装目录
+##### 设置mysql的安装目录
 basedir=D:\mysql
-# 设置mysql数据库的数据的存放目录
+##### 设置mysql数据库的数据的存放目录
 datadir=D:\mysql\data
-# 允许最大连接数
+##### 允许最大连接数
 max_connections=200
-# 服务端使用的字符集默认为8比特编码的latin1字符集
+##### 服务端使用的字符集默认为8比特编码的latin1字符集
 character-set-server=utf8
-# 创建新表时将使用的默认存储引擎
+##### 创建新表时将使用的默认存储引擎
 default-storage-engine=INNODB
 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
  
 [mysql]
-# 设置mysql客户端默认字符集
+##### 设置mysql客户端默认字符集
 default-character-set=utf8
-#代码结束
+**----代码结束----**
 
 4、配置环境变量；
 4.1、新建系统变量 MYSQL_HOME ，并配置变量值为 D:\mysql ；
