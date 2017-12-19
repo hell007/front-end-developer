@@ -651,6 +651,10 @@ MYSQL,Oracle
 
 	SELECT FName, INSTR(FName,'m') , INSTR(FName,'ly') FROM T_Person
 
+INSERT(str,pos,len,newstr)
+
+返回字符串str，使用在开始位置pos和len个字符的的字符串，newstr取代长字符串。返回原始字符串，如果帖子不是字符串的长度范围内。从替换位置pos字符串的其余部分如果len不是字符串的其余部分的长度范围内。返回NULL，如果任何参数是NULL
+
 查询手机号码，中间四位为 * 替换
 	
 	SELECT FNAME,INSERT(FPHONE,4,4,'****') FROM T_PERSON
