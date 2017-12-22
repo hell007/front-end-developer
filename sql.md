@@ -651,14 +651,6 @@ MYSQL,Oracle
 
 	SELECT FName, INSTR(FName,'m') , INSTR(FName,'ly') FROM T_Person
 
-INSERT(str,pos,len,newstr)
-
-返回字符串str，使用在开始位置pos和len个字符的的字符串，newstr取代长字符串。返回原始字符串，如果帖子不是字符串的长度范围内。从替换位置pos字符串的其余部分如果len不是字符串的其余部分的长度范围内。返回NULL，如果任何参数是NULL
-
-查询手机号码，中间四位为 * 替换
-	
-	SELECT FNAME,INSERT(FPHONE,4,4,'****') FROM T_PERSON
-
 7.从左\右侧开始取子字符串
 
 LEFT (string,length) 其中参数 string 为主字符串，length 为子字符串的最大长
@@ -731,7 +723,15 @@ SQL 中提供了 SOUNDEX()函数用于计算一个字符串的发音特征值，
 	SOUNDEX('juke') , SOUNDEX('look') , SOUNDEX('jobe')
 	FROM DUAL
 
+12.替换指定字符串
 
+	INSERT(str,pos,len,newstr)
+
+返回字符串str，使用在开始位置pos和len个字符的的字符串，newstr取代长字符串。返回原始字符串，如果帖子不是字符串的长度范围内。从替换位置pos字符串的其余部分如果len不是字符串的其余部分的长度范围内。返回NULL，如果任何参数是NULL。
+
+查询手机号码，中间四位为 * 替换
+	
+	SELECT FNAME,INSERT(FPHONE,4,4,'****') FROM T_PERSON
 
 #### 日期时间函数
 
