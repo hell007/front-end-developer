@@ -1599,7 +1599,7 @@ DROP TABLE T_AUTHOR;
 
 	SELECT T_Order.FId,FNumber,FPrice FROM T_Order 
 	INNER JOIN T_Customer
-	ON FCustomerId = T_Customer.FId
+	ON FCustomerId = T_Customer.FId  // T_ORDER FCustomerId
 	WHERE T_Customer.FName ='TOM'
 
 注意： 
@@ -1678,7 +1678,9 @@ INNER JOIN 中的 INNER 是可选的，INNER JOIN 是默认的连接方式
 	ON o1.FTypeId=o2.FTypeId and o1.FId<>o2.FId //<>
 
 1.注意sql语句的写法，否组无意义
+
 2.同一张表需要指定不同的别名   (T_Order => o1,o2)
+
 3.数据库系统把“A匹配B”与“B匹配A”看成了两个不同的匹配，导致数据重复,所以and后面的条件非常重要
 
 
@@ -1742,6 +1744,19 @@ mysql中使用左外部连接 、右外部连接 和UNION
 
 >注意： 外连接返回的不符合条件的语句  通过where条件来进行过滤掉的
 
+**表连接总计**
+
+1.当只要取出数据，不带任何条件可以使用   union 、  交叉连接隐式  来实现
+	
+	SELECT T1.* FROM TABLE1 T1  UNION  SELECT T2.* FROM TABLE2 T2
+	
+	SELECT T1.* ,T2.* FROM TABLE1 TA,TABLE2 T2
+
+2.多表具有匹配记录使用内连接  inner  join ... on ...
+
+3.空值处理，不具有匹配记录使用外连接  left/right join ... on ...
+
+4.外连接可以实现内连接的功能
 
 ## 子查询
 
