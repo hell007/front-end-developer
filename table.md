@@ -1,6 +1,6 @@
 
 
-1.user
+1.用户
 
 	create table jie_user(
 		uid varchar(64) not null unique primary key comment '用户id',
@@ -56,7 +56,33 @@
 
 
 
+2. 文章
 
+	create table jie_article(
+		id varchar(64) not null unique primary key comment '文章id',
+		title varchar(25) not null unique comment '文章标题',
+		keywords varchar(50) not null default '街' comment '关键字',
+		author varchar(20) not null default '街' comment '作者',
+		views int unsigned not null default 188 comment '浏览量',
+		source_pic varchar(100) comment '源图',
+		small_pic varchar(100) comment '小图',
+		contents text not null comment '文章内容',
+		channel_id int unsigned not null comment '文章栏目',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		is_hot tinyint unsigned not null default 1 comment '是/否 热门',
+		create_time datetime not null comment '创建时间',
+		update_time datetime not null comment '更新时间',
+		foreign key (channel_id) references jie_article_channel (id)
+	)
+
+
+	create table jie_article_channel(
+		id int unsigned not null unique primary key auto_increment comment '文章栏目id',
+		name varchar(20) not null unique comment '文章栏目',
+		pid int unsigned not null default 0 comment '文章id父级id',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		sort smallint unsigned not null default '100' comment '排序'
+	)
 
 2.
 
