@@ -223,6 +223,19 @@
 	goods_attr_id int unsigned not null comment '商品属性id',
 	foreign key (goods_id) references jie_goods(goods_id)
 	)
+	
+	create table jie_concern(
+	id int unsigned not null unique primary key auto_increment comment '关注id',
+	goods_id varchar(64) not null unique comment '关注商品id',
+	concern_price decimal(10,2) unsigned not null comment '关注价',
+	user_id varchar(64) not null comment '用户id',
+	create_time datetime not null comment '创建时间'
+	)
+
+
+
+
+
 
 	
 ##### 管理人员
