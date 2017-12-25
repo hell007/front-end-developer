@@ -73,5 +73,30 @@
 		sort smallint unsigned not null default '100' comment '排序'
 	)
 	
-	
+##### 3. 广告
+
+	create table jie_advertisement(
+		id varchar(64) not null unique primary key comment '广告id',
+		name varchar(25) not null unique comment '广告名称',
+		ad_img varchar(100) comment '广告图',
+		ad_url varchar(255) comment '广告链接',
+		ad_code text not null comment '广告代码',
+		channel_id int unsigned not null comment '文章栏目',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		is_hot tinyint unsigned not null default 1 comment '是/否 热门',
+		start_time datetime not null comment '开始时间',
+		end_time datetime not null comment '结束时间',
+		create_time datetime not null comment '创建时间',
+		update_time datetime not null comment '更新时间',
+		foreign key (channel_id) references jie_ad_channel (id)
+	)
+
+
+	create table jie_ad_channel(
+		id int unsigned not null unique primary key auto_increment comment '广告栏目id',
+		name varchar(20) not null unique comment '广告栏目',
+		pid int unsigned not null default 0 comment '广告id父级id',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		sort smallint unsigned not null default '100' comment '排序'
+	)
 	
