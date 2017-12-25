@@ -104,8 +104,8 @@
 ##### 品牌
 
 	create table jie_brand(
-		id varchar(64) not null unique primary key comment '品牌id',
-		name varchar(20) not null unique comment '品牌名称',
+		id int unsigned not null unique primary key auto_increment comment '品牌id',
+		brand_name varchar(20) not null unique comment '品牌名称',
 		note varchar(200) comment '描述',
 		logo varchar(100) comment '品牌图',
 		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
