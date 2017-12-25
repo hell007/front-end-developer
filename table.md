@@ -1,4 +1,4 @@
-1.用户
+##### 1.用户
 
 	create table jie_user(
 		uid varchar(64) not null unique primary key comment '用户id',
@@ -45,7 +45,7 @@
 
 
 
-2. 文章
+##### 2. 文章
 
 	create table jie_article(
 		id varchar(64) not null unique primary key comment '文章id',
