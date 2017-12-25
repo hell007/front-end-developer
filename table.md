@@ -53,9 +53,6 @@
 		values 
 		('关大玉','13876677777',null,null,2,3,3,'浦江大道新东方花园',(select uid from jie_user where name = '范逸尘'))
 
-
-
-
 2. 文章
 
 	create table jie_article(
