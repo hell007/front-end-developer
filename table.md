@@ -1,4 +1,5 @@
-##### 1.用户
+
+##### 用户
 
 	create table jie_user(
 		uid varchar(64) not null unique primary key comment '用户id',
@@ -45,7 +46,7 @@
 
 
 
-##### 2. 文章
+##### 文章
 
 	create table jie_article(
 		id varchar(64) not null unique primary key comment '文章id',
@@ -73,7 +74,7 @@
 		sort smallint unsigned not null default '100' comment '排序'
 	)
 	
-##### 3. 广告
+##### 广告
 
 	create table jie_advertisement(
 		id varchar(64) not null unique primary key comment '广告id',
@@ -99,4 +100,39 @@
 		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
 		sort smallint unsigned not null default '100' comment '排序'
 	)
-	
+
+##### 品牌
+
+	create table jie_brand(
+		id varchar(64) not null unique primary key comment '品牌id',
+		name varchar(20) not null unique comment '品牌名称',
+		note varchar(200) comment '描述',
+		logo varchar(100) comment '品牌图',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		url varchar(255) comment '品牌链接',
+		sort int unsigned not null default '100' comment '排序'
+	)
+
+
+##### 管理人员
+
+create table jie_admin(
+	id int unsigned not null unique primary key auto_increment comment '系统id',
+	name varchar(20) not null unique comment '系统用户',
+	password char(32) not null comment '密码',
+	salt varchar(64) not null comment '盐值',
+	email varchar(50) not null unique comment '邮箱',
+	mobile varchar(15) not null unique comment '手机号码',
+	ip varchar(20) not null comment '登录ip',
+	is_super tinyint unsigned not null comment '是/否 超级管理者',
+	status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+	create_time datetime not null comment '创建时间',
+	login_time datetime not null comment '登录时间'
+)
+
+
+##### 管理人员
+
+
+
+
