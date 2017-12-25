@@ -113,7 +113,91 @@
 		sort int unsigned not null default '100' comment '排序'
 	)
 
+##### 类型
 
+	create table jie_goods_type(
+		id int unsigned not null unique primary key auto_increment comment '类型id',
+		type_name varchar(20) not null unique comment '类型名称',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		sort int unsigned not null default '50' comment '排序'
+	)
+
+	create table jie_goods_type_attr(
+		id int unsigned not null unique primary key auto_increment comment '类型属性id',
+		attr_name varchar(20) not null unique comment '类型属性名称',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		sort int unsigned not null default '50' comment '排序',
+		goods_type_id  int unsigned not null comment '类型id',
+		foreign key (goods_type_id) references jie_goods_type(id)
+	)
+
+##### 分类
+
+	create table jie_category(
+		id int unsigned not null unique primary key auto_increment comment '分类id',
+		category_name varchar(20) not null unique comment '分类名称',
+		keywords varchar(50) not null comment '关键词',
+		`desc` varchar(100) not null comment '描述',
+		pid int unsigned not null comment '分类父级id',
+		goods_type_id int unsigned not null comment '类型',
+		filter_attr varchar(100) not null comment '筛选属性',
+		is_nav tinyint unsigned not null default 0 comment '是/否 导航',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		sort int unsigned not null default '50' comment '排序'
+	)
+
+##### 商品包
+
+	create table jie_goods_pack(
+		id int unsigned not null unique primary key auto_increment comment '商品包id',
+		pack_name varchar(40) not null unique comment '商品包名称',
+		pid int unsigned not null default 0 comment '商品包父级id',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		sort int unsigned not null default '50' comment '排序'
+	)
+
+	create table jie_goods_pack_attr(//不全
+		id int unsigned not null unique primary key auto_increment comment '商品包属性id',
+		attr_name varchar(20) not null unique comment '商品包属性名称',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		sort int unsigned not null default '50' comment '排序',
+		goods_pack_id int unsigned not null comment '类型id',
+		foreign key (goods_pack_id) references jie_goods_pack(id)
+	)
+	
+#####
+
+	create table jie_goods(//不全
+		goods_id varchar(64) not null unique primary key comment '商品id',
+		goods_sn int unsigned not null unique comment '商品编号', 
+		goods_name varchar(50) not null unique comment '商品名称',
+		promote_word varchar(100) not null comment '促销词',
+		brand_id int unsigned not null comment '品牌',
+		category_id int unsigned not null comment '分类',
+		goods_type_id int unsigned not null comment '类型',
+		goods_pack_id int unsigned not null comment '商品包',
+		goods_color int unsigned not null comment '颜色',
+		goods_volume int unsined not null comment '容量',
+		shop_id varchar(64) not null default '000000' comment '商户',
+		market_price decimal(10,2) unsigned not null comment '市场价',
+		goods_price decimal(10,2) unsigned not null comment '商品价',
+		is_promote tinyint unsigned not null default 0 comment '促销',
+		promote_price decimal(10,2) unsigned not null comment '促销价',
+		promote_stime datetime not null comment '促销开始时间',
+		promote_etime datetime not null commnet '促销结束时间',
+		is_on_sale tinyint unsigned not null defalut 0 comment '上架',
+		is_first tinyint unsigned not null default 0 comment '首发',
+		is_hot tinyint unsigned not null default 0 comment '热卖',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		sku int unsigned not null default 0 comment '库存',
+		unit enum('件','箱') not null default '件' comment '单位',
+		views int unsigned not null default 188 comment '浏览数',
+		concerns int unsigned not null default 0 comment '关注数',
+		create_time datetime not null comment '创建时间',
+		update_time datetime not null comment '更新时间'
+	)
+
+	
 ##### 管理人员
 
 	create table jie_admin(
@@ -133,6 +217,7 @@
 
 ##### 
 
+	
 
 
 
