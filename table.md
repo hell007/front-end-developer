@@ -168,33 +168,60 @@
 #####
 
 	create table jie_goods(//不全
-		goods_id varchar(64) not null unique primary key comment '商品id',
-		goods_sn int unsigned not null unique comment '商品编号', 
-		goods_name varchar(50) not null unique comment '商品名称',
-		promote_word varchar(100) not null comment '促销词',
-		brand_id int unsigned not null comment '品牌',
-		category_id int unsigned not null comment '分类',
-		goods_type_id int unsigned not null comment '类型',
-		goods_pack_id int unsigned not null comment '商品包',
-		goods_color int unsigned not null comment '颜色',
-		goods_volume int unsined not null comment '容量',
-		shop_id varchar(64) not null default '000000' comment '商户',
-		market_price decimal(10,2) unsigned not null comment '市场价',
-		goods_price decimal(10,2) unsigned not null comment '商品价',
-		is_promote tinyint unsigned not null default 0 comment '促销',
-		promote_price decimal(10,2) unsigned not null comment '促销价',
-		promote_stime datetime not null comment '促销开始时间',
-		promote_etime datetime not null commnet '促销结束时间',
-		is_on_sale tinyint unsigned not null defalut 0 comment '上架',
-		is_first tinyint unsigned not null default 0 comment '首发',
-		is_hot tinyint unsigned not null default 0 comment '热卖',
-		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
-		sku int unsigned not null default 0 comment '库存',
-		unit enum('件','箱') not null default '件' comment '单位',
-		views int unsigned not null default 188 comment '浏览数',
-		concerns int unsigned not null default 0 comment '关注数',
-		create_time datetime not null comment '创建时间',
-		update_time datetime not null comment '更新时间'
+	goods_id varchar(64) not null unique primary key comment '商品id',
+	goods_sn int unsigned not null unique comment '商品编号', 
+	goods_name varchar(50) not null unique comment '商品名称',
+	promote_word varchar(100) not null comment '促销词',
+	keywords varchar(60) not null comment '关键词',
+	`description` varchar(150) comment '描述',
+	contents text not null comment '商品内容',
+	goods_icon varchar(50) comment '活动图标',
+	brand_id int unsigned not null comment '品牌',
+	category_id int unsigned not null comment '分类',
+	goods_type_id int unsigned not null comment '类型',
+	goods_pack_id int unsigned not null comment '商品包',
+	goods_color int unsigned not null comment '颜色',
+	goods_volume int unsined not null comment '容量',
+	shop_id varchar(64) not null default '000000' comment '商户',
+	market_price decimal(10,2) unsigned not null comment '市场价',
+	goods_price decimal(10,2) unsigned not null comment '商品价',
+	is_promote tinyint unsigned not null default 0 comment '促销',
+	promote_price decimal(10,2) unsigned not null comment '促销价',
+	promote_stime datetime not null comment '促销开始时间',
+	promote_etime datetime not null commnet '促销结束时间',
+	is_on_sale tinyint unsigned not null defalut 0 comment '上架',
+	is_first tinyint unsigned not null default 0 comment '首发',
+	is_hot tinyint unsigned not null default 0 comment '热卖',
+	status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+	sku int unsigned not null default 0 comment '库存',
+	unit enum('件','箱') not null default '件' comment '单位',
+	views int unsigned not null default 188 comment '浏览数',
+	concerns int unsigned not null default 0 comment '关注数',
+	samll_pic varchar(100) not null comment '小图',
+	medium_pic varcar(100) not null comment '中图',
+	create_time datetime not null comment '创建时间',
+	update_time datetime not null comment '更新时间'
+	)
+
+
+
+
+	create table jie_goods_gallery(
+	gallery_id int unsigned not null unique primary key comment '商品画廊id',
+	gallery_color_name varchar(10) not null comment '颜色名称',
+	samll_pic varchar(100) not null comment '小图',
+	medium_pic varcar(100) not null comment '中图',
+	source_pic varcar(100) not null comment '中图',
+	goods_id varchar(64) not null comment '商品id',
+	foreign key (goods_id) references jie_goods(goods_id)
+	)
+
+	create table jie_goods_attr_list(
+	attr_list_id int unsigned not null unique primary key comment '商品属性列表id',
+	attr_value varchar(100) not null comment '商品属性列表值',
+	goods_id varchar(64) not null comment '商品id',
+	goods_attr_id int unsigned not null comment '商品属性id',
+	foreign key (goods_id) references jie_goods(goods_id)
 	)
 
 	
