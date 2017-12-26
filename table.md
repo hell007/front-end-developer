@@ -224,12 +224,11 @@
 	foreign key (goods_id) references jie_goods(goods_id)
 	)
 	
-	create table jie_concern(
-	id int unsigned not null unique primary key auto_increment comment '关注id',
-	goods_id varchar(64) not null unique comment '关注商品id',
-	concern_price decimal(10,2) unsigned not null comment '关注价',
-	user_id varchar(64) not null comment '用户id',
-	create_time datetime not null comment '创建时间'
+	create table jie_role(
+	role_id int unsigned not null unique primary key auto_increment comment '角色id',
+	role_name varchar(20) not null unique comment '角色名称',
+	description varchar(100) not null comment '角色职责描述',
+	status tinyint unsigned not null default 1 comment '开启/关闭 状态'
 	)
 
 
@@ -238,21 +237,36 @@
 
 
 	
-##### 管理人员
+##### 管理人员 权限表
 
 	create table jie_admin(
-		id int unsigned not null unique primary key auto_increment comment '系统id',
-		name varchar(20) not null unique comment '系统用户',
-		password char(32) not null comment '密码',
-		salt varchar(64) not null comment '盐值',
-		email varchar(50) not null unique comment '邮箱',
-		mobile varchar(15) not null unique comment '手机号码',
-		ip varchar(20) not null comment '登录ip',
-		is_super tinyint unsigned not null comment '是/否 超级管理者',
-		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
-		create_time datetime not null comment '创建时间',
-		login_time datetime not null comment '登录时间'
+	id int unsigned not null unique primary key auto_increment comment '系统id',
+	role_id int unsigned not null comment '角色',
+	name varchar(20) not null unique comment '系统用户',
+	password char(32) not null comment '密码',
+	salt varchar(64) not null comment '盐值',
+	email varchar(50) not null unique comment '邮箱',
+	mobile varchar(15) not null unique comment '手机号码',
+	ip varchar(20) not null comment '登录ip',
+	is_super tinyint unsigned not null comment '是/否 超级管理者',
+	status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+	create_time datetime not null comment '创建时间',
+	login_time datetime not null comment '登录时间'
 	)
+
+	create table jie_role(
+	role_id int unsigned not null unique primary key auto_increment comment '角色id',
+	name varchar(20) not null unique comment '角色名称',
+	description varchar(100) not null comment '角色职责描述',
+	status tinyint unsigned not null default 1 comment '开启/关闭 状态'
+	)
+	
+	create table jie_access(
+	role_id int unsigned not null comment '角色id',
+	permission_id int unsigned not null comment '权限id'
+	)
+	
+	jie_permission
 
 
 ##### 
