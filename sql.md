@@ -1569,19 +1569,22 @@ INSERT 语句与 CHECK 约束"ck_1"冲突。该冲突发生于数据库"demo"，
 	ADD CONSTRAINT pk_1 PRIMARY KEY(FNumber,FName)
 
 删除主键
+
 	ALTER TABLE T_Person DROP PRIMARY KEY
 
 
 5.外键约束
 
 添加外键
+
 	ALTER TABLE T_Book
 	ADD CONSTRAINT fk_book_author
 	FOREIGN KEY (FAuthorId) REFERENCES T_AUTHOR(FId)
 
 删除外键
-DROP TABLE T_Book;
-DROP TABLE T_AUTHOR;
+
+	DROP TABLE T_Book;
+	DROP TABLE T_AUTHOR;
 
 先删除T_Book
 
