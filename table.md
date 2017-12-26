@@ -139,16 +139,17 @@
 ##### 分类
 
 	create table jie_category(
-		id int unsigned not null unique primary key auto_increment comment '分类id',
+		category_id int unsigned not null unique primary key auto_increment comment '分类id',
 		category_name varchar(20) not null unique comment '分类名称',
 		keywords varchar(50) not null comment '关键词',
 		descption varchar(100) not null comment '描述',
 		pid int unsigned not null comment '分类父级id',
-		goods_type_id int unsigned not null comment '类型',
+		type_id int unsigned not null comment '类型',
 		filter_attr varchar(100) not null comment '筛选属性',
 		is_nav tinyint unsigned not null default 0 comment '是/否 导航',
 		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
-		sort int unsigned not null default '50' comment '排序'
+		sort int unsigned not null default '50' comment '排序',
+		foreign key (type_id) references jie_goods_type(type_id)
 	)
 
 ##### 商品包
@@ -248,7 +249,16 @@
 		status tinyint unsigned not null default 1 comment '开启/关闭 状态'
 	)
 
+#### 购物车
 
+	create table jie_cart(
+		id int unsigned not null unique primary key auto_increment comment '购物车id',
+		goods_sn int unsigned not null unique comment '商品编号',
+		goods_num int unsigned not null comment '商品数量',
+		uid varchar(64) not null comment '用户id',
+		create_time datetime not null comment '添加时间',
+		foreign key (goods_sn) references jie_goods(goods_sn)
+	)
 
 	
 ##### 管理人员 权限表
