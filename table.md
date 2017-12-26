@@ -132,8 +132,8 @@
 		attr_type tinyint unsigned not null default 0 comment '类型参数(0：参数，1：规格)',
 		attr_group_id smallint unsigned not null default 0 comment '未知',
 		sort int unsigned not null default '50' comment '排序',
-		goods_type_id  int unsigned not null comment '类型id',
-		foreign key (goods_type_id) references jie_goods_type(type_id)
+		type_id  int unsigned not null comment '类型id',
+		foreign key (type_id) references jie_goods_type(type_id)
 	)
 
 ##### 分类
@@ -142,7 +142,7 @@
 		id int unsigned not null unique primary key auto_increment comment '分类id',
 		category_name varchar(20) not null unique comment '分类名称',
 		keywords varchar(50) not null comment '关键词',
-		`desc` varchar(100) not null comment '描述',
+		descption varchar(100) not null comment '描述',
 		pid int unsigned not null comment '分类父级id',
 		goods_type_id int unsigned not null comment '类型',
 		filter_attr varchar(100) not null comment '筛选属性',
@@ -154,90 +154,98 @@
 ##### 商品包
 
 	create table jie_goods_pack(
-		id int unsigned not null unique primary key auto_increment comment '商品包id',
+		pack_id int unsigned not null unique primary key auto_increment comment '商品包id',
 		pack_name varchar(40) not null unique comment '商品包名称',
 		pid int unsigned not null default 0 comment '商品包父级id',
 		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
-		sort int unsigned not null default '50' comment '排序'
+		sort int unsigned not null default 50 comment '排序'
 	)
 
-	create table jie_goods_pack_attr(//不全
+	create table jie_goods_pack_attr(
 		id int unsigned not null unique primary key auto_increment comment '商品包属性id',
 		attr_name varchar(20) not null unique comment '商品包属性名称',
-		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		attr_values text comment '属性值',
+		attr_type tinyint unsigned not null default 0 comment '属性参数(0：参数，1：规格)',
+		attr_radio tinyint unsigned not null default 2 comment '属性是否可选(1:唯一属性;2:单选属性;3:复选属性)',
+		attr_input_type tinyint unsigned not null default 2 comment '属性值录入方式',
+		attr_group_id tinyint unsigned not null default 0 comment '未知',
+		pack_id int unsigned not null comment '商品包id',
 		sort int unsigned not null default '50' comment '排序',
-		goods_pack_id int unsigned not null comment '类型id',
-		foreign key (goods_pack_id) references jie_goods_pack(id)
+		foreign key (pack_id) references jie_goods_pack(pack_id)
 	)
 	
-#####
+##### 商品
 
-	create table jie_goods(//不全
-	goods_id varchar(64) not null unique primary key comment '商品id',
-	goods_sn int unsigned not null unique comment '商品编号', 
-	goods_name varchar(50) not null unique comment '商品名称',
-	promote_word varchar(100) not null comment '促销词',
-	keywords varchar(60) not null comment '关键词',
-	`description` varchar(150) comment '描述',
-	contents text not null comment '商品内容',
-	goods_icon varchar(50) comment '活动图标',
-	brand_id int unsigned not null comment '品牌',
-	category_id int unsigned not null comment '分类',
-	goods_type_id int unsigned not null comment '类型',
-	goods_pack_id int unsigned not null comment '商品包',
-	goods_color int unsigned not null comment '颜色',
-	goods_volume int unsined not null comment '容量',
-	shop_id varchar(64) not null default '000000' comment '商户',
-	market_price decimal(10,2) unsigned not null comment '市场价',
-	goods_price decimal(10,2) unsigned not null comment '商品价',
-	is_promote tinyint unsigned not null default 0 comment '促销',
-	promote_price decimal(10,2) unsigned not null comment '促销价',
-	promote_stime datetime not null comment '促销开始时间',
-	promote_etime datetime not null commnet '促销结束时间',
-	is_on_sale tinyint unsigned not null defalut 0 comment '上架',
-	is_first tinyint unsigned not null default 0 comment '首发',
-	is_hot tinyint unsigned not null default 0 comment '热卖',
-	is_activity tinyint unsigned not null default 0 comment '是/否  活动，默认不支持，支持的话，详情不可访问',
-	sku int unsigned not null default 0 comment '库存',
-	limit_num int unsigned not null default 99999 comment '限制购买数量、默认不限制',
-	unit enum('件','箱') not null default '件' comment '单位',
-	views int unsigned not null default 188 comment '浏览数',
-	concerns int unsigned not null default 0 comment '关注数',
-	samll_pic varchar(100) not null comment '小图',
-	medium_pic varcar(100) not null comment '中图',
-	create_time datetime not null comment '创建时间',
-	update_time datetime not null comment '更新时间'
+	create table jie_goods(
+		goods_id varchar(64) not null unique primary key comment '商品id',
+		goods_sn int unsigned not null unique comment '商品编号', 
+		goods_name varchar(50) not null unique comment '商品名称',
+		promote_word varchar(100) not null comment '促销词',
+		keywords varchar(60) not null comment '关键词',
+		description varchar(150) comment '描述',
+		contents text not null comment '商品内容',
+		goods_icon varchar(50) comment '活动图标',
+		brand_id int unsigned not null comment '品牌',
+		category_id int unsigned not null comment '分类',
+		type_id int unsigned not null comment '类型',
+		pack_id int unsigned not null comment '商品包',
+		pack_attr varchar(255) not null comment '商品包属性',
+		goods_color tinyint unsigned not null comment '颜色',
+		goods_volume tinyint unsigned not null comment '容量',
+		shop_id varchar(64) not null default '000000' comment '商户',
+		market_price decimal(10,2) unsigned not null comment '市场价',
+		goods_price decimal(10,2) unsigned not null comment '商品价',
+		is_promote tinyint unsigned not null default 0 comment '促销',
+		promote_price decimal(10,2) unsigned not null comment '促销价',
+		promote_stime datetime not null comment '促销开始时间',
+		promote_etime datetime not null comment '促销结束时间',
+		is_on_sale tinyint unsigned not null default 0 comment '上架',
+		is_first tinyint unsigned not null default 0 comment '首发',
+		is_hot tinyint unsigned not null default 0 comment '热卖',
+		is_activity tinyint unsigned not null default 0 comment '是/否  活动，默认不支持，支持的话，详情不可访问',
+		activity_price decimal(10,2) unsigned not null comment '活动价',
+		activity_stime datetime not null comment '活动开始时间',
+		activity_etime datetime not null comment '活动结束时间',
+		sku int unsigned not null default 0 comment '库存',
+		limit_num int unsigned not null default 99999 comment '限制购买数量、默认不限制',
+		unit enum('件','箱') not null default '件' comment '单位',
+		views int unsigned not null default 188 comment '浏览数',
+		concerns int unsigned not null default 0 comment '关注数',
+		samll_pic varchar(100) not null comment '小图',
+		medium_pic varchar(100) not null comment '中图',
+		create_time datetime not null comment '创建时间',
+		update_time datetime not null comment '更新时间'
 	)
-	
+
 	create table jie_goods_attr_list(
-	attr_list_id int unsigned not null unique primary key comment '商品属性列表id',
-	attr_value varchar(100) not null comment '商品属性列表值',
-	goods_id varchar(64) not null comment '商品id',
-	goods_attr_id int unsigned not null comment '商品属性id',
-	foreign key (goods_id) references jie_goods(goods_id)
+		attr_list_id int unsigned not null unique primary key comment '商品属性列表id',
+		attr_value varchar(100) not null comment '商品属性列表值',
+		goods_sn int unsigned not null comment '商品编号',
+		goods_attr_id int unsigned not null comment '商品属性id',
+		foreign key (goods_sn) references jie_goods(goods_sn)
 	)
 
 
 #### 图片库
 
 	create table jie_goods_gallery(
-	gallery_id int unsigned not null unique primary key comment '商品画廊id',
-	gallery_color_name varchar(10) not null comment '颜色名称',
-	samll_pic varchar(100) not null comment '小图',
-	medium_pic varcar(100) not null comment '中图',
-	source_pic varcar(100) not null comment '中图',
-	goods_id varchar(64) not null comment '商品id',
-	foreign key (goods_id) references jie_goods(goods_id)
+		gallery_id int unsigned not null unique primary key comment '商品画廊id',
+		gallery_name varchar(10) not null comment '颜色名称',
+		samll_pic varchar(100) not null comment '小图',
+		medium_pic varchar(100) not null comment '中图',
+		source_pic varchar(100) not null comment '中图',
+		goods_sn int unsigned not null comment '商品编号',
+		foreign key (goods_sn) references jie_goods(goods_sn)
 	)
 
 #### 热词
 
 	create table jie_search(
-	id int unsigned not null unique primary key auto_increment comment '热词id',
-	goods_sn varchar(64) not null comment '商品编号',
-	name varchar(20) not null unique comment '热词名称',
-	url varchar(100) not null comment '热词链接',
-	status tinyint unsigned not null default 1 comment '开启/关闭 状态'
+		id int unsigned not null unique primary key auto_increment comment '热词id',
+		goods_sn  int unsigned not null comment '商品编号',
+		name varchar(20) not null unique comment '热词名称',
+		url varchar(100) not null comment '热词链接',
+		status tinyint unsigned not null default 1 comment '开启/关闭 状态'
 	)
 
 
