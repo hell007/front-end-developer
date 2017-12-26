@@ -194,6 +194,7 @@
 	is_hot tinyint unsigned not null default 0 comment '热卖',
 	status tinyint unsigned not null default 1 comment '开启/关闭 状态',
 	sku int unsigned not null default 0 comment '库存',
+	limit_num int unsigned not null default 99999 comment '限制购买数量、默认不限制',
 	unit enum('件','箱') not null default '件' comment '单位',
 	views int unsigned not null default 188 comment '浏览数',
 	concerns int unsigned not null default 0 comment '关注数',
