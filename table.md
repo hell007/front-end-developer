@@ -116,19 +116,24 @@
 ##### 类型
 
 	create table jie_goods_type(
-		id int unsigned not null unique primary key auto_increment comment '类型id',
+		type_id int unsigned not null unique primary key auto_increment comment '类型id',
 		type_name varchar(20) not null unique comment '类型名称',
+		type_category varchar(255) comment '类型分类',
 		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
-		sort int unsigned not null default '50' comment '排序'
+		sort int unsigned not null default 50 comment '排序'
 	)
 
-	create table jie_goods_type_attr(
-		id int unsigned not null unique primary key auto_increment comment '类型属性id',
+##### 属性
+
+	create table jie_goods_attr(
+		attr_id int unsigned not null unique primary key auto_increment comment '类型属性id',
 		attr_name varchar(20) not null unique comment '类型属性名称',
-		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+		attr_may_value text comment '类型属性可选值',
+		attr_type tinyint unsigned not null default 0 comment '类型参数(0：参数，1：规格)',
+		attr_group_id smallint unsigned not null default 0 comment '未知',
 		sort int unsigned not null default '50' comment '排序',
 		goods_type_id  int unsigned not null comment '类型id',
-		foreign key (goods_type_id) references jie_goods_type(id)
+		foreign key (goods_type_id) references jie_goods_type(type_id)
 	)
 
 ##### 分类
@@ -203,9 +208,17 @@
 	create_time datetime not null comment '创建时间',
 	update_time datetime not null comment '更新时间'
 	)
+	
+	create table jie_goods_attr_list(
+	attr_list_id int unsigned not null unique primary key comment '商品属性列表id',
+	attr_value varchar(100) not null comment '商品属性列表值',
+	goods_id varchar(64) not null comment '商品id',
+	goods_attr_id int unsigned not null comment '商品属性id',
+	foreign key (goods_id) references jie_goods(goods_id)
+	)
 
 
-
+#### 图片库
 
 	create table jie_goods_gallery(
 	gallery_id int unsigned not null unique primary key comment '商品画廊id',
@@ -217,21 +230,7 @@
 	foreign key (goods_id) references jie_goods(goods_id)
 	)
 
-	create table jie_goods_attr_list(
-	attr_list_id int unsigned not null unique primary key comment '商品属性列表id',
-	attr_value varchar(100) not null comment '商品属性列表值',
-	goods_id varchar(64) not null comment '商品id',
-	goods_attr_id int unsigned not null comment '商品属性id',
-	foreign key (goods_id) references jie_goods(goods_id)
-	)
-	
-	create table jie_role(
-	role_id int unsigned not null unique primary key auto_increment comment '角色id',
-	role_name varchar(20) not null unique comment '角色名称',
-	description varchar(100) not null comment '角色职责描述',
-	status tinyint unsigned not null default 1 comment '开启/关闭 状态'
-	)
-
+#### 热词
 
 	create table jie_search(
 	id int unsigned not null unique primary key auto_increment comment '热词id',
