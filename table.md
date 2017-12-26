@@ -266,7 +266,17 @@
 	permission_id int unsigned not null comment '权限id'
 	)
 	
-	jie_permission
+	create table jie_permission(
+	permission_id int unsigned not null unique primary key auto_increment comment '权限id',
+	permission_name varchar(32) not null unique comment '权限名称',
+	pid int unsigned not null comment '权限父id',
+	code varchar(100) comment '权限标识',
+	url varchar(100) comment '权限链接',
+	level tinyint unsigned not null comment '权限级别',
+	is_common tinyint unsigned not null default 0 comment '开启/关闭 常用',
+	status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+	sort tinyint unsigned not null default 1 comment '排序',
+	)
 
 
 ##### 
