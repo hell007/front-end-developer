@@ -233,7 +233,13 @@
 	)
 
 
-
+	create table jie_search(
+	id int unsigned not null unique primary key auto_increment comment '热词id',
+	goods_sn varchar(64) not null comment '商品编号',
+	name varchar(20) not null unique comment '热词名称',
+	url varchar(100) not null comment '热词链接',
+	status tinyint unsigned not null default 1 comment '开启/关闭 状态'
+	)
 
 
 
