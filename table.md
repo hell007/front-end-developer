@@ -192,7 +192,7 @@
 	is_on_sale tinyint unsigned not null defalut 0 comment '上架',
 	is_first tinyint unsigned not null default 0 comment '首发',
 	is_hot tinyint unsigned not null default 0 comment '热卖',
-	status tinyint unsigned not null default 1 comment '开启/关闭 状态',
+	is_activity tinyint unsigned not null default 0 comment '是/否  活动，默认不支持，支持的话，详情不可访问',
 	sku int unsigned not null default 0 comment '库存',
 	limit_num int unsigned not null default 99999 comment '限制购买数量、默认不限制',
 	unit enum('件','箱') not null default '件' comment '单位',
