@@ -157,6 +157,7 @@
 	create table jie_goods_pack(
 		pack_id int unsigned not null unique primary key auto_increment comment '商品包id',
 		pack_name varchar(40) not null unique comment '商品包名称',
+		pack_category varchar(255) not null comment '商品包分类',
 		pid int unsigned not null default 0 comment '商品包父级id',
 		status tinyint unsigned not null default 1 comment '开启/关闭 状态',
 		sort int unsigned not null default 50 comment '排序'
