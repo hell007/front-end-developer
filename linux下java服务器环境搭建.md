@@ -1,11 +1,16 @@
 # linux下 java服务器环境搭建
-ssh root@121.42.13.42 aiyu6361W
+
 一、先卸载系统中自带的java，没有就不用卸载 
+
+```
 yum list installed |grep java(查看已有的java) 
 yum -y remove java-1.7.0-openjdk*（卸载相应的java 1.7.0位版本号，因人而异） 
 yum -y remove tzdata-java.noarch （卸载tzdata-java）（以上命令没装java跑跑也没事）
- 
+```
+
 二.java配置（jdk）
+
+```
 #新建java目录，下载java压缩包
 #cd usr
 #mkdir java
@@ -26,7 +31,12 @@ export PATH=$PATH:$JAVA_HOME/bin
 #source /etc/profile 
 #查看
 #java -version
- 三、tomcat安装
+
+```
+
+三、tomcat安装
+
+```
 #cd usr
 #下载
 #wget http://mirrors.hust.edu.cn/apache/tomcat/tomcat-7/v7.0.68/bin/apache-tomcat-7.0.68.tar.gz
@@ -37,23 +47,28 @@ export PATH=$PATH:$JAVA_HOME/bin
 #cd /usr/apache-tomcat-7.0.68/bin
 #ls
 #./startup.sh
- 
+
 ##note:浏览器中输入 用ip:8080访问,如果不出现 检查端口是否开启 ，或者查看tomcat的配置文件是80还是8080
 ###更改端口
 #cd /usr/apache-tomcat-7.0.68/conf
 #sudo vi server.xml   //使用管理员权限编辑
 ## cat server.xml 
- 
+
 ###查看日志
 #cd ../logs
 #ls
 # cat localhost_access_log.2016-03-04.txt 
 # cat host-manager.2016-03-04.log 
 # cat catalina.2016-03-04.log 
- 
+
 ####查看tomcat开启的端口
 # /etc/init.d/iptables status
- 四、MySQL安装
+
+```
+
+四、MySQL安装
+
+```
 a.本地安装MySQL
 1.把安装文件拷贝到 /usr下
 2.解压文件 ，重命名
@@ -132,58 +147,77 @@ UPDATE user SET `Host` = '%' WHERE `User` = 'root' LIMIT 1;
 /usr/bin（mysqladmin mysqldump等命令）
 (d)启动脚本
 /etc/rc.d/init.d/（启动脚本文件mysql的目录）
-
+```
 
 四、MySQL的安装二
+
 1.卸载掉原有mysql
+
+```
 # rpm -qa | grep mysql　　// 这个命令就会查看该操作系统上是否已经安装了mysql数据库
 # rpm -e mysql　　// 普通删除模式
 # rpm -e --nodeps mysql　　// 强力删除模式，如果使用上面命令删除时，提示有依赖的其它文
 ##在删除完以后我们可以通过 rpm -qa | grep mysql 命令来查看mysql是否已经卸载成功！！
- 
+```
+
 2.通过yum来进行mysql的安装
+
+```
 #yum list | grep mysql //稍等片刻 就可以得到yum服务器上mysql数据库的可下载版本信息
- 
+
 #yum install -y mysql-server mysql mysql-devel  //命令将mysql mysql-server mysql-devel都安装好
 ###注意:安装mysql时我们并不是安装了mysql客户端就相当于安装好了mysql数据库了，我们还需要安装mysql-server服务端才行
- 
+
 #rpm -qi mysql-server  //查看刚安装好的mysql-server的版本
- 
+```
+
 3.mysql数据库的初始化及相关配置
+
+```
 #service mysqld start //初始化 数据多
 #service mysqld start //再次启动  数据少
- 
+
 ###查看mysql服务是不是开机自动启动
 #chkconfig --list | grep mysqld
- 
+
 ###我们发现mysqld服务并没有开机自动启动，我们当然可以通过 chkconfig mysqld on 命令来将其设置成开机启动，这样就不用每次都去手动启动了
- 
+
 #chkconfig mysqld on //设置成开机启动，这样就不用每次都去手动启动了
 #chkconfig --list | grep mysql
- 
+
 ### 设置账号密码
 #mysqladmin -u root password 'aiyuxxx'
 #此时我们就可以通过 mysql -u root -p 命令来登录我们的mysql数据库了
- 
+```
+
 4.mysql数据库的主要配置文件 //http://www.centoscn.com/mysql/2014/1211/4290.html
- 
+
 5.创建数据库
+
+```
 [root@iZ28507paaeZ /]# cd /
 [root@iZ28507paaeZ /]# mysql -u root -p
 mysql> create database kunyujie;
 mysql> show databases;
- 
+```
+
 6.配置 MySQL 远程连接
+
 (1)开启3306端口
+
+```
 #iptables -I INPUT 4 -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
 #service iptables save  //保存 iptables 规则
- 
+```
+
 (2)数据库授权
+
+```
 #mysql -u root -p 
 mysql> grant all privileges on kunyujie.* to root@'%' identified by ‘ai***’; //授权语句
 mysql> flush privileges;
 mysql> exit;
-
+```
 
 五、安装 nginx
 
