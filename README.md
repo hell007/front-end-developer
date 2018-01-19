@@ -18,6 +18,13 @@
 
 [sso](./sso.md)
 
+[Spring Boot 项目怎么部署](http://blog.csdn.net/javahighness/article/details/52515226)
+
+[Spring Boot 项目怎么部署](http://www.cnblogs.com/linux-wangkun/p/5709074.html)
+
+[用 Docker 构建、运行、发布来一个 Spring Boot 应用](http://blog.csdn.net/kkkloveyou/article/details/50942275)
+
+
 #### sql笔记
 
 [Mysql解压缩版配置安装](./Mysql解压缩版配置安装.md)
