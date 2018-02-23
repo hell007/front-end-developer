@@ -54,6 +54,8 @@
 
 [rax](https://alibaba.github.io/rax/guide/getting-started)
 
+[jQuery 图片裁剪插件](https://www.awesomes.cn/repo/fengyuanchen/cropper)
+
 
 
 
