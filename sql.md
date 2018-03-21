@@ -1,6 +1,8 @@
 
 ## 创建表
 
+
+
 >MYSQL
 
 	CREATE TABLE T_PERSON(
@@ -33,6 +35,19 @@
 		FPERSON VARCHAR2(20),
 		FOREIGN KEY(FPERSON) REFERENCES T_PERSON(FNAME)
 	)
+
+### 修改mysql 表的存储引擎
+
+如何将MyISAM库导成INNODB引擎格式的:
+
+1.在备份出的xxx.sql文件中把ENGINE=MyISAM全换成ENGINE=INNODB再次导入就可以了
+
+2.转换表的命令:
+
+```
+mysql> alter table 表名 engine = innodb;
+```
+
 
 ## 表复制
 
