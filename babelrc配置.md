@@ -216,6 +216,6 @@ presets按照数组的index倒序(从数组最后一个到第一个)进行编译
 
 
 
-	## 参考文档
+## 参考文档
 
-	[官方文档](https://babeljs.io/docs/plugins/)
+[官方文档](https://babeljs.io/docs/plugins/)
