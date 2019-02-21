@@ -6,25 +6,25 @@
 
 函数柯里化在JavaScript中其实是高阶函数（可以作为参数传递，或作为返回值）的一种应用。
 
-function add(a, b, c) {
-    return a + b + c;
-};
+    function add(a, b, c) {
+        return a + b + c;
+    };
 
-console.log('add===',add(1,2,3,4))
+    console.log('add===',add(1,2,3,4))
 
-var add = function(x) {
-  return function(y) {
-    return function(z) {
-      return x + y + z;
+    var add = function(x) {
+      return function(y) {
+        return function(z) {
+          return x + y + z;
+        }
+      }
     }
-  }
-}
 
-var add1 = add(1);
-var add2 = add1(2);
-var add3 = add2(3);
+    var add1 = add(1);
+    var add2 = add1(2);
+    var add3 = add2(3);
 
-console.log('add3==',add3);
+    console.log('add3==',add3);
 
 2、函数柯里化公式
 
