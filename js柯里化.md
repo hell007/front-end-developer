@@ -1,13 +1,117 @@
-### 柯里化
-`
-function test(m){
-    return function(n){
-        return m+n;
+## 函数柯里化柯里化
+
+1、概念
+
+函数柯里化：指封装一个函数，接收原始函数作为参数传入，并返回一个能够接收并处理剩余参数的函数。
+
+函数柯里化在JavaScript中其实是高阶函数（可以作为参数传递，或作为返回值）的一种应用。
+
+function add(a, b, c) {
+    return a + b + c;
+};
+
+console.log('add===',add(1,2,3,4))
+
+var add = function(x) {
+  return function(y) {
+    return function(z) {
+      return x + y + z;
     }
+  }
 }
-var n = test(2)(3);
-console.log(n)
-`
+
+var add1 = add(1);
+var add2 = add1(2);
+var add3 = add2(3);
+
+console.log('add3==',add3);
+
+2、函数柯里化公式
+
+以下几个公式（左边是普通函数，右边就是转化后柯里化函数支持的调用方式）：
+
+    // 公式类型一
+    fn(a,b,c,d) => fn(a)(b)(c)(d);
+    fn(a,b,c,d) => fn(a, b)(c)(d);
+    fn(a,b,c,d) => fn(a)(b,c,d);
+
+    // 公式类型二
+    fn(a,b,c,d) => fn(a)(b)(c)(d)();
+    fn(a,b,c,d) => fn(a);fn(b);fn(c);fn(d);fn();
+
+- 两种公式类型的区别 —— 函数触发执行的机制不同：
+
+        公式一当传入参数等于函数参数数量时开始执行；
+        公式二当没有参数传入时（且参数数量满足）开始执行；
+
+通过公式，我们先来理解这行代码 fn(a)(b)(c)(d), 执行 fn(a) 时返回的是一个函数，并且支持传参。何时返回目标函数结果值而不是函数的触发机制，控制权在我们手里，我们可以为函数制定不同的触发机制。
+
+普通的函数调用，一次性传入参数就执行。而通过柯里化，它可以帮我们实现函数部分参数传入执行（并未立即执行原始函数，钱没存够接着存），这就是函数柯里化的特点："延迟执行和部分求值"。
+
+- 实例
+
+a. 公式类型一
+
+    //需要被柯里化的函数
+    const add = a => b => c => d => a + b + c + d;
+
+    //柯里化
+    const curry = fn => {
+      let _args = [];
+      let length = fn.length; // fn.length代码函数参数数量
+
+      return (...rest) => {
+        //console.log('rest==',...rest)
+        //...rest等于curryAdd后面的参数值
+        let _allArgs = _args.slice(0);  
+        //console.log('_allArgs==',_allArgs)
+        // 深拷贝闭包共用对象_args，避免后续操作影响（引用类型）
+        _allArgs.push(...rest);
+        //console.log('_allArgs vs _allArgs.length',_allArgs,_allArgs.length)
+        if (_allArgs.length < length) {
+          // 参数数量不满足原始函数数量，返回curry函数
+          return curry.call(this, fn, ..._allArgs);
+        } else {
+          // 参数数量满足原始函数数量，触发执行
+          //console.log('_allArgs===',_allArgs)
+          return fn.apply(this, _allArgs);
+        }
+      }
+    }
+
+    //柯里化后调用
+    const curryAdd = curry(add);
+    let sum = curryAdd(2)(3)(4)(5);    // 14
+    console.log('sum=',sum) 
+
+    // ES5写法
+    function curry() {
+        var fn = arguments[0];
+        var _args = [].slice.call(arguments, 1);
+        var length = fn.length;
+
+        return function() {
+            var _allArgs = _args.slice(0);
+            _allArgs = _allArgs.concat([].slice.call(arguments));
+            if (_allArgs.length < length) {
+                _allArgs.unshift(fn);
+                return createCurry.apply(this, _allArgs);
+            } else {
+                return fn.apply(this, _allArgs);
+            }
+        }
+    }
+
+b. 公式类型二
+
+
+
+
+
+
+
+
+
 
 
 ### js 链式调用
