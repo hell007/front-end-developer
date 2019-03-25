@@ -10,7 +10,7 @@
 
 [柯里化](./js柯里化.md)
 
-[promise-async/await-fetch](./promise-async-await-fetch.md)
+[promise-async/await-fetch](https://github.com/hell007/js-jquery-Component/blob/master/javascript/promise-async-await-fetch.md)
 
 
 #### 算法与数据结构
