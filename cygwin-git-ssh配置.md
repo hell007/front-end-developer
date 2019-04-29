@@ -107,7 +107,6 @@
 
     git checkout master 
     git reset --hard
-    git pull
 
 解决办法2：git 强行pull并覆盖本地文件
 
