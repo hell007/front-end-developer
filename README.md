@@ -24,11 +24,11 @@
 
 [微信小程序开发](./微信小程序开发.md)
 
-[webpack笔记](./webpack-note.md)
+[webpack笔记](./webpack配置.md)
 
 [makedown笔记](./md-note.md)
 
-[git使用](./git-note.md)
+[git使用](./cygwin-git-ssh配置.md)
 
 
 #### 其他文档
