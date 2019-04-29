@@ -1,6 +1,8 @@
-## 配置Cygwin 支持git和SSH
+# 配置Cygwin支持git和SSH的使用
 
-### git
+## git的安装配置、使用
+
+### git的安装
 
 1、安装git
 
@@ -31,7 +33,7 @@
     git config -l
 
 
-##### git使用
+## git的使用
 
 1、克隆
     
@@ -77,7 +79,7 @@
 
     git push
     
-##### git 其他操作
+### git的其他操作
     
 1、误将代码提交到缓存中（利用 git add 命令误将代码提交的缓存中）
 
@@ -114,7 +116,7 @@
     git pull
 
 
-### ssh
+## ssh的安装配置、使用
 
 1、安装SSH
 
