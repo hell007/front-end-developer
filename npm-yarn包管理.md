@@ -84,7 +84,7 @@ npm-check 是检测 package.json 文件，项目存在 node_modules 文件夹即
     
  ### 5、CLI 命令比较
  
-![](npm-yarn-command.jpg)
+![](./images/npm-yarn-command.jpg)
 
  
 
