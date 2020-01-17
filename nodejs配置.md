@@ -31,6 +31,11 @@
   PATH: D:\Dev\nodejs\node_global\;
   
   
+ 计算机->属性->高级系统配置->环境变量->系统变量->编辑path,添加如下：
+ 
+ PATH: D:\Dev\nodejs\;
+  
+  
 #### 总结：
 
   不需要添加系统环境变量NODE_PATH，只需编辑用户环境变量
