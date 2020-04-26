@@ -40,5 +40,6 @@
 [jQuery 图片裁剪插件](https://www.awesomes.cn/repo/fengyuanchen/cropper)
 
 
+#### [前端面试之简历](https://www.jianshu.com/p/a3802f6f4499)
 
 
