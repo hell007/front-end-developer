@@ -47,11 +47,11 @@
  
 - 虚拟DOM到底是什么？
  
-其实VNode，是对真实DOM的一种抽象描述，就是一个普通的JavaScript对象，包含了 属性（props）、标签名（tag）、数据(data)、子节点(children)、键值等，其它属性都是用来扩展 VNode 的灵活性以及实现一些特殊特征的。
+    其实VNode，是对真实DOM的一种抽象描述，就是一个普通的JavaScript对象，包含了 属性（props）、标签名（tag）、数据(data)、子节点(children)、键值等，其它属性都是用来扩展 VNode 的灵活性以及实现一些特殊特征的。
 
-由于 VNode 只是用来映射到真实DOM的渲染，不需要包含操作DOM的方法，因此它是非常轻量和简单的。
+    由于 VNode 只是用来映射到真实DOM的渲染，不需要包含操作DOM的方法，因此它是非常轻量和简单的。
 
-Virtual DOM 除了它的数据结构的定义，映射到真实的 DOM 实际上要经历 VNode 的 create、diff、patch 等过程。
+    Virtual DOM 除了它的数据结构的定义，映射到真实的 DOM 实际上要经历 VNode 的 create、diff、patch 等过程。
 
 
 [虚拟 DOM 到底是什么？(长文建议收藏)](https://mp.weixin.qq.com/s/oAlVmZ4Hbt2VhOwFEkNEhw)
