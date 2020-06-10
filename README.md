@@ -2,16 +2,9 @@
 
 #### 前端笔记
 
- [网站加载速度优化策略](./网站加载速度优化策略.md)
+ [javascript知识](./JAVASCRIPT)
 
-[web前端图片极限优化策略](./web前端图片极限优化策略.md)
-
-[Js的性能优化加载和执行](./Js的性能优化加载和执行.md)
-
-[柯里化](./js柯里化.md)
-
-[promise-async/await-fetch](https://github.com/hell007/js-jquery-Component/blob/master/javascript/promise-async-await-fetch.md)
-
+[前端性能优化](./Front-End-Performance-Optimization)
 
 #### 算法与数据结构
 
@@ -22,11 +15,9 @@
 
 #### 构建工具与其他
 
-[微信小程序开发](./微信小程序开发.md)
+[微信小程序开发](./Wechat-Dev)
 
-[webpack笔记](./webpack配置.md)
-
-[makedown笔记](./md-note.md)
+[webpack](./WEBPACK)
 
 [git使用](./cygwin-git-ssh配置.md)
 
