@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>js链式调用</title>
+</style>
+</head>
+<body>
+
+</body>
+<script type="text/javascript" charset="utf-8">
+function add(n) {
+  
+  var fn = function(m) {
+    return add(n+m);
+  };
+
+  fn.valueOf = function() {
+    console.log(222)
+    return n;
+  };
+
+  fn.toString = function() {
+    console.log(333)
+    return '' + n;
+  };
+
+  return fn;
+}
+
+//console.log(+add(1)) // 结果 1
+console.log(+add(1)(2))  // 结果 3
+// console.log(+add(1)(2)(3))  // 结果 6
+// console.log(+add(1)(2)(3)(4))  // 结果 10
+// console.log('' +add(1)(2)(3)(4))  // 结果 "10"
+
+// 因为是链式调用，所以返回值肯定是一个函数，这个函数我们记为fn。
+// 这个fn就是下一次调用的函数，当然它还是会返回一个函数，显然这个函数跟fn的结构是完全一样的。但是如果这样一直写下去，你要写无数次。所以呢，直接返回add就可以了，有点类似递归。
+// 而且，第二次调用add时需要把之前的结果累加进去，所以是add(m + n)，“加法”就是在这一步实现的。
+// 既然每次都返回一个函数，那么怎样把计算结果取出来呢？我们把返回值函数的toString和valueOf方法重写了，让它们返回和。这是因为对象(函数也是一种对象)在转为原始类型时，会调用自身的toString和(或)valueOf方法。这样以来，就可以把结果用在表达式中了，例如
+// add(1) + add(2)(3) // 结果6
+//add(3)(4) * add(5)(6) // 结果77
+
+
+function adds(x){  
+    //由于要一个数记住每次的计算值，所以使用了闭包，在addFake中记住了x的值，第一次调用add(),初始化了addFake，并将x保存在addFake的作用链中，然后返回addFake  
+    //保证了第二次调用的是addFake函数，后面的计算都是在条用addFake, 因为addFake也是返回的自己，保证了第二次之后的调用也是调用addFake，而在addFake中将传入的  
+    //参数与保存在作用链中x相加并付给x，这样就保证了计算；但是在计算完成后还是返回了addFake这个函数，这样就获取不到计算的结果了，我们需要的结果是一个计算的数字  
+    //那么怎么办呢，首先要知道JavaScript中，打印和相加计算，会分别调用toString或valueOf函数，所以我们重写addFake的toString和valueOf方法，返回x的值  
+    function addFake(y){  
+        x = x + y;  
+        return addFake;  
+    };  
+    addFake.toString = addFake.valueOf = function(){return x;};  
+    return addFake;  
+}
+
+console.log(+adds(1))
+
+console.log(+adds(1)(2))
+
+</script>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>多态举例</title>
+</style>
+</head>
+<body>
+
+</body>
+<script type="text/javascript" charset="utf-8">
+function Add(){
+	
+	//无参数算法
+	function zero(){
+		return 10;
+	}
+
+	//1个参数算法
+	function one(num){
+		return 10 + num;
+	}
+
+	//2个参数算法
+	function two(num1,num2){
+		return  num1 + num2;
+	}
+
+	//相加共有方法
+	this.add = function(){
+		var arg = arguments,
+			len = arg.length;
+		switch(len){
+			case 0:
+				return zero();
+			case 1:
+				return one(arg[0]);
+			case 2:
+				return two(arg[0],arg[1]);
+		}
+	}
+}
+
+//实例化
+var a = new Add();
+//测试
+console.log(a.add()) //10
+
+console.log(a.add(5)) //15
+
+console.log(a.add(6,7)) //13
+
+</script>
+</html>
