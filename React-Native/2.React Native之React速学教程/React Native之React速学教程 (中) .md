@@ -231,7 +231,370 @@ const makeCancelable = (promise) => {
 };
 ```
 
+## React17.0生命周期调整
+
+react团队对生命周期做了调整，将会移除 componentWillMount，componentWillReceiveProps，componentWillUpdate这三个生命周期，因为这些生命周期方法容易被误解和滥用。
+
+1、组件数据初始化
+
+一般我们为了提前 setState ，防止二次渲染（第一次是空state渲染，第二次外部数据渲染），经常在 componentWillMount 生命周期请求数据
+
+```
+// Before
+class ExampleComponent extends React.Component {
+  state = {
+    externalData: null,
+  };
+ 
+  componentWillMount() {
+    this._asyncRequest = asyncLoadData().then(
+      externalData => {
+        this._asyncRequest = null;
+        this.setState({externalData});
+      }
+    );
+  }
+ 
+  componentWillUnmount() {
+    if (this._asyncRequest) {
+      this._asyncRequest.cancel();
+    }
+  }
+ 
+  render() {
+    if (this.state.externalData === null) {
+      // Render loading state ...
+    } else {
+      // Render real UI ...
+    }
+  }
+}
+```
+
+但是事实却不是这样的，异步获取外部数据不一定会在渲染之前返回，这也意味着组件也有可能会被渲染一次，为了后面新版本实现异步渲染，建议请求放在 componentDidMount 来调用
+
+还有一个问题是，componentWillMount 在服务端渲染（nuxt.js）的时候会导致服务端和客户端各渲染一次，而 componentDidMount 只在客户端渲染一次
+
+```
+// After
+class ExampleComponent extends React.Component {
+  state = {
+    externalData: null,
+  };
+ 
+  componentDidMount() {
+    this._asyncRequest = loadMyAsyncData().then(
+      externalData => {
+        this._asyncRequest = null;
+        this.setState({externalData});
+      }
+    );
+  }
+ 
+  componentWillUnmount() {
+    if (this._asyncRequest) {
+      this._asyncRequest.cancel();
+    }
+  }
+ 
+  render() {
+    if (this.state.externalData === null) {
+      // Render loading state ...
+    } else {
+      // Render real UI ...
+    }
+  }
+}
+```
+
+2、事件监听和解绑
+
+事件的监听最好的实践是在 componentDidMount 来实现，因为只有在调用 componentDidMount 的时候，React才会确保 componentWillUnmount 回调能顺利执行，防止内存泄漏 
+
+```
+
+class ExampleComponent extends React.Component {
+  state = {
+    subscribedValue: this.props.dataSource.value,
+  };
+ 
+  componentDidMount() {
+    // Event listeners are only safe to add after mount,
+    // So they won't leak if mount is interrupted or errors.
+    this.props.dataSource.subscribe(
+      this.handleSubscriptionChange
+    );
+ 
+    // External values could change between render and mount,
+    // In some cases it may be important to handle this case.
+    if (
+      this.state.subscribedValue !==
+      this.props.dataSource.value
+    ) {
+      this.setState({
+        subscribedValue: this.props.dataSource.value,
+      });
+    }
+  }
+ 
+  componentWillUnmount() {
+    this.props.dataSource.unsubscribe(
+      this.handleSubscriptionChange
+    );
+  }
+ 
+  handleSubscriptionChange = dataSource => {
+    this.setState({
+      subscribedValue: dataSource.value,
+    });
+  };
+}
+```
+
+3、基于props更新state
+
+我们经常会在 componentWillReceiveProps 来做props比较，然后更新组件的state
+
+```
+class ExampleComponent extends React.Component {
+  state = {
+    isScrollingDown: false,
+  };
+ 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.currentRow !== nextProps.currentRow) {
+      this.setState({
+        isScrollingDown:
+          nextProps.currentRow > this.props.currentRow,
+      });
+    }
+  }
+}
+```
+
+从版本16.3开始，更新state以响应props更改的推荐方法是使用新的静态 getDerivedStateFromProps生命周期。 （生命周期在组件创建时以及每次收到新的props时调用）
+
+```
+class ExampleComponent extends React.Component {
+  // Initialize state in constructor,
+  // Or with a property initializer.
+  state = {
+    isScrollingDown: false,
+    lastRow: null,
+  };
+ 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.currentRow !== prevState.lastRow) {
+      return {
+        isScrollingDown:
+          nextProps.currentRow > prevState.lastRow,
+        lastRow: nextProps.currentRow,
+      };
+    }
+ 
+    // Return null to indicate no change to state.
+    return null;
+  }
+}
+```
+
+getDerivedStateFromProps 有两个参数 nextProps，prevState，第一个是用来获取新的props，第二个参数可以获取组件的上一个state，
+
+有可能有个疑问，为什么不把上一个 props 也传递过来，React团队在设计的时候考虑过这个问题，有两个原因
+
+```
+在第一次调用 getDerivedStateFromProps（实例化后）时，prevProps参数将为null，需要在访问 prevProps 时添加if-not-null检查
+没有将以前的props传递给这个函数，可以把之前不需要用的props释放掉，避免内存占用
+```
+
+4、调用外部组件的回调函数
+
+如果我们需要在一个在内部状态发生变化时，调用外部组件的函数做一些事情，我们可能会这样做
+
+```
+class ExampleComponent extends React.Component {
+  componentWillUpdate(nextProps, nextState) {
+    if (
+      this.state.someStatefulValue !==
+      nextState.someStatefulValue
+    ) {
+      nextProps.onChange(nextState.someStatefulValue);
+    }
+  }
+}
+```
+
+但是问题是，在异步模式下使用 componentWillUpdate 都是不安全的，因为外部回调可能在组件的一次state更新下多次调用。
+相反，应该使用 componentDidUpdate 生命周期，因为它保证每次更新只调用一次
+
+```
+class ExampleComponent extends React.Component {
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.state.someStatefulValue !==
+      prevState.someStatefulValue
+    ) {
+      this.props.onChange(this.state.someStatefulValue);
+    }
+  }
+}
+```
+
+5、基于props改变获取服务端数据
+
+我们一般会在 componentWillReceiveProps 的回调里面判断，然后 _loadAsyncData 获取接口数据
+
+```
+class ExampleComponent extends React.Component {
+  state = {
+    externalData: null,
+  };
+ 
+  componentDidMount() {
+    this._loadAsyncData(this.props.id);
+  }
+ 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.id !== this.props.id) {
+      this.setState({externalData: null});
+      this._loadAsyncData(nextProps.id);
+    }
+  }
+ 
+  componentWillUnmount() {
+    if (this._asyncRequest) {
+      this._asyncRequest.cancel();
+    }
+  }
+ 
+  render() {
+    if (this.state.externalData === null) {
+      // Render loading state ...
+    } else {
+      // Render real UI ...
+    }
+  }
+ 
+  _loadAsyncData(id) {
+    this._asyncRequest = asyncLoadData(id).then(
+      externalData => {
+        this._asyncRequest = null;
+        this.setState({externalData});
+      }
+    );
+  }
+}
+```
+
+这样虽然没毛病，但是为了兼容新的api，官方推荐的做法是在 getDerivedStateFromProps 回调里面处理传递过来的props，然后将异步获取数据放在 componentDidUpdate 中
+
+```
+class ExampleComponent extends React.Component {
+  state = {
+    externalData: null,
+  };
+ 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // Store prevId in state so we can compare when props change.
+    // Clear out previously-loaded data (so we don't render stale stuff).
+    if (nextProps.id !== prevState.prevId) {
+      return {
+        externalData: null,
+        prevId: nextProps.id,
+      };
+    }
+ 
+    // No state update necessary
+    return null;
+  }
+ 
+  componentDidMount() {
+    this._loadAsyncData(this.props.id);
+  }
+ 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.externalData === null) {
+      this._loadAsyncData(this.props.id);
+    }
+  }
+ 
+  componentWillUnmount() {
+    if (this._asyncRequest) {
+      this._asyncRequest.cancel();
+    }
+  }
+ 
+  render() {
+    if (this.state.externalData === null) {
+      // Render loading state ...
+    } else {
+      // Render real UI ...
+    }
+  }
+ 
+  _loadAsyncData(id) {
+    this._asyncRequest = asyncLoadData(id).then(
+      externalData => {
+        this._asyncRequest = null;
+        this.setState({externalData});
+      }
+    );
+  }
+}
+```
+
+6、在更新之前读取dom的属性
+
+在更新一个列表容器数据的时候，我们需要保持滚动条的位置，可以在 getSnapshotBeforeUpdate 新的生命周期里面去获取dom的属性，
+例如offsetHeight，scrollHeight等属性，它可以将React的值作为参数传递给 componentDidUpdate ，在数据发生变化后立即调用它。
+
+```
+class ScrollingList extends React.Component {
+  listRef = null;
+ 
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    // Are we adding new items to the list?
+    // Capture the scroll position so we can adjust scroll later.
+    if (prevProps.list.length < this.props.list.length) {
+      return (
+        this.listRef.scrollHeight - this.listRef.scrollTop
+      );
+    }
+    return null;
+  }
+ 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // If we have a snapshot value, we've just added new items.
+    // Adjust scroll so these new items don't push the old ones out of view.
+    // (snapshot here is the value returned from getSnapshotBeforeUpdate)
+    if (snapshot !== null) {
+      this.listRef.scrollTop =
+        this.listRef.scrollHeight - snapshot;
+    }
+  }
+ 
+  render() {
+    return (
+      `<div>`
+        {/* ...contents... */}
+      `</div>`
+    );
+  }
+ 
+  setListRef = ref => {
+    this.listRef = ref;
+  };
+}
+```
+
+7、新版如何兼容旧的API
+
+可以通过 react-lifecycles-compat 可以使新的 getDerivedStateFromProps 生命周期与旧版本的React一起使用。
+
+
+
 ## 参考  
+[React17.0生命周期调整](https://blog.csdn.net/hsany330/article/details/105660559)
 [React's official site](https://facebook.github.io/react/)  
 [React on ES6+](https://babeljs.io/blog/2015/06/07/react-on-es6-plus)
 
