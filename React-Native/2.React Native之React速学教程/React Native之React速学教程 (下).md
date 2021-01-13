@@ -251,7 +251,7 @@ export default Enhance(MyComponent); // Enhanced component
 ```
 >心得： 因为无论是箭头函数还是bind()每次被执行都返回的是一个新的函数引用，所以，推荐大家在组件的构造函数中来绑定`this`。
 
->```javascript
+```javascript
 constructor(props) {
   super(props);
   this.state = {count: props.initialCount};
