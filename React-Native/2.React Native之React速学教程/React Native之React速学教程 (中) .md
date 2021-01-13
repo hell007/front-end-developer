@@ -594,7 +594,8 @@ class ScrollingList extends React.Component {
 
 
 ## 参考  
+
 [React17.0生命周期调整](https://blog.csdn.net/hsany330/article/details/105660559)
-[React's official site](https://facebook.github.io/react/)  
+[React's official site](https://facebook.github.io/react/)
 [React on ES6+](https://babeljs.io/blog/2015/06/07/react-on-es6-plus)
 
