@@ -1,0 +1,68 @@
+1、理念上的差别
+
+Vue 是通过对数据的劫持/代理一系列操作来进行数据的变化。
+
+React 推崇函数式，数据的变化是通过直接进行局部重新渲染。
+
+但是 React 并不知道什么时候“应该去渲染”，所以触发局部重新变化是由开发者手动调用 setState 完成。
+
+React setState 引起局部重新刷新。为了达到更好的性能，React 暴漏给开发者 shouldComponentUpdate 这个生命周期 hook，来避免不需要的重新渲染。
+
+Vue 由于采用依赖追踪，默认就是优化状态：你动了多少数据，就触发多少更新，不多也不少。
+
+React 对数据变化毫无感知，它就提供 React.createElement 调用已生成 virtual dom。
+
+另外 React 为了弥补不必要的更新，会对 setState 的行为进行合并操作。因此 setState 有时候会是异步更新，但并不是总是“异步”。
+
+2、以及核心差异对后续设计产生的不可逆影响
+
+setup hook 是 vue3 推出的新功能，对标 react 的 setup hook。
+
+React hook 底层是基于链表(Array)实现，每次组件被 render 的时候都会顺序执行所有的 hooks，因为底层是链表，每一个 hook 的 next 是指向下一个 hook 的，所以要求开发者不能在不同 hooks 调用中使用判断条件，因为 if 会导致顺序不正确，从而导致报错。
+
+Vue3 hook 只会被注册调用一次，Vue之所以能避开这些麻烦的问题，根本原因在于它对数据的响应是基于响应式的，是对数据进行了代理的。不需要链表进行 hooks 记录，它对数据直接代理观察。
+
+但是 Vue 这种响应式的方案，也有自己的困扰。比如 useState()返回的是一个 value wrapper (包装对象)。一个包装对象只有一个属性：.value ，该属性指向内部被包装的值。我们知道在 JavaScript 中，原始值类型如 string 和 number 是只有值，没有引用的。不管是使用 Object.defineProperty 还是 Proxy，我们无法追踪原始变量后续的变化。因此 Vue 不得不返回一个包装对象，不然对于基本类型，它无法做到数据的代理和拦截。
+
+
+
+3、Vue 和 React 在 API 设计风格的不同
+
+React 事件系统庞大而复杂。它暴漏给开发者的事件不是原生事件，并且 this 不是指向组件或者实例本身。
+
+React暴漏给开发者的事件不是原生事件，是 React 包装过合成事件，并且非常重要的一点是，合成事件是池化的。也就是说不同的事件，可能会共享一个合成事件对象。
+
+React 对所有事件都进行了代理，将所有事件都绑定 document 上。
+
+React 中事件处理函数中的 this 默认不指向组件实例。
+
+Vue 事件处理函数中的 this 默认指向组件实例。
+
+
+
+4、渲染的比对
+
+jsx 和手写的 render function 是完全动态的，过度的灵活性导致运行时可以用于优化的信息不足，所以 react 就只能显示调用 setState 来强行更新组件。
+
+由于无从减掉一些不必要的渲染对比，所以 react 对此的解决方法就是引入了时间分片 react fibber，把 patch 并且更新视图的过程切分成多个任务，分批更新。
+
+vue 会标明某些 dom 是静态的，并且 Vue 3.0 提出的动静结合的 DOM diff 思想，开始做到了标记哪个 DOM 绑定了变量需要 patch，省去也不必要的 patch 更新的优化操作。
+
+因为 Vue core 可以静态分析 template，在解析模版时，整个 parse 的过程是利用正则表达式顺序解析模板，当解析到开始标签、闭合标签、文本的时候都会分别执行对应的回调函数，来达到构造 AST 树的目的。
+
+![ast](./images/ast.jpeg)
+
+
+
+React无法从模版层面进行静态分析，开发者在项目中开发 babel 插件，实现 JSX 编译成 React.createElement，那么优化手段就是在 babel 插件上处理。
+
+
+
+![](./images/react-parse.jpeg)
+
+
+
+## 参考
+
+[Vue 和 React 的核心差异](https://www.cnblogs.com/everlose/p/12538474.html)
+
