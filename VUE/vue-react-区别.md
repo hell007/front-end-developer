@@ -3,11 +3,17 @@
 ##### 相同点
 
 1.都使用了Virtual DOM
+
 2.都支持服务器端渲染
+
 3.提供了响应式（Reactive）和组件化（Composable）的视图组件
+
 4.都有’props’的概念，这是properties的简写。props在组件中是一个特殊的属性，允许父组件往子组件传送数据
+
 5.构建工具：
+
 React和Vue都有自己的构建工具，你可以使用它快速搭建开发环境。
+
 React可以使用Create React App (CRA)，而Vue对应的则是vue-cli。两个工具都能让你得到一个根据最佳实践设置的项目模板。
 
 ##### 主要区别
