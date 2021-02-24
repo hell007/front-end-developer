@@ -1,6 +1,6 @@
 ## VUE2 vs VUE3 的区别
 
-1、vue2和vue3双向数据绑定原理不同
+>1、vue2和vue3双向数据绑定原理不同
 
 vue2 的双向数据绑定是利用ES5 的一个 API `Object.definePropert()`对数据进行劫持 结合 发布订阅模式的方式来实现的。
 
@@ -15,28 +15,37 @@ Proxy 返回的是一个新对象,我们可以只操作新的对象达到目的,
 Proxy 不需要初始化的时候遍历所有属性，另外有多层属性嵌套的话，只有访问某个属性的时候，才会递归处理下一级的属性
 
 
-2、template的不同
+>2、片段(碎片Fragments)
 
 2.x版本中，只能有一个根节点。
 
-3.x版本中，支持碎片(Fragments)，即一个组件可以拥有多个根节点。
+3.x版本中，支持片段，即一个组件可以拥有多个根节点。
 
-vue3 中标记和提升所有的静态根节点，diff 的时候只需要对比动态节点内容。
 
-3、api的不同
+3、自定义指令
 
-2.x版本中，使用选项式API（Options API）
+API已重命名，以便更好地与组件生命周期保持一致
 
-3.x版本中，使用组合式API（Composition API）
+自定义指令将由子组件通过 v-bind="$attrs"
 
-Vue 3.0 所采用的 Composition Api 与 Vue 2.x 使用的 Options Api 区别：
 ```
-Vue2 中,我们会在一个vue文件的 data，methods，computed，watch 中定义属性和方法，共同处理页面逻辑 。一个功能的实现，代码过于分散。
-vue3 中,代码是根据逻辑功能来组织的，一个功能的所有 api 会放在一起（高内聚，低耦合），提高可读性和可维护性,
-基于函数组合的 API 更好的重用逻辑代码，利于维护和封装。
+bind → beforeMount
+inserted → mounted
+beforeUpdate：新的！这是在元素本身更新之前调用的，很像组件生命周期钩子。
+update → 移除！有太多的相似之处要更新，所以这是多余的，请改用 updated。
+componentUpdated → updated
+beforeUnmount：新的！与组件生命周期钩子类似，它将在卸载元素之前调用。
+unbind -> unmounted
 ```
 
-4、生命周期钩子不同
+4、过滤器
+
+2.x版本中，开发者可以使用过滤器来处理通用文本格式。
+
+3.x版本中，过滤器已删除，不再支持。建议用计算属性或方法代替过滤器，而不是使用过滤器。
+
+
+5、生命周期钩子不同
 
 3.x版本中， 生周期钩子不是全局可调用的了，需要另外从vue中引入
 
@@ -70,8 +79,31 @@ export default {
 }
 ```
 
+6、api的不同
 
-5、this的不同
+a. Options API - Composition API
+
+2.x版本中，使用选项式API（Options API）
+
+3.x版本中，使用组合式API（Composition API）
+
+Vue 3.0 所采用的 Composition Api 与 Vue 2.x 使用的 Options Api 区别：
+```
+Vue2 中,我们会在一个vue文件的 data，methods，computed，watch 中定义属性和方法，共同处理页面逻辑 。一个功能的实现，代码过于分散。
+vue3 中,代码是根据逻辑功能来组织的，一个功能的所有 api 会放在一起（高内聚，低耦合），提高可读性和可维护性,
+基于函数组合的 API 更好的重用逻辑代码，利于维护和封装。
+```
+
+b.渲染函数 API
+
+2.x版本中，h函数 (createElement的常规别名) 作为render函数的参数。
+
+3.x版本中，h函数 是全局导入的，而不是作为参数自动传递。
+
+render 函数不再接收任何参数，它将主要用于 setup() 函数内部
+
+
+7、prop 默认函数中访问this的不同
 
 2.x版本中，this代表的是当前组件，可以直接使用this访问prop属性值。
 
