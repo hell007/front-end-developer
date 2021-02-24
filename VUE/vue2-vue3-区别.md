@@ -1,6 +1,6 @@
 ## VUE2 vs VUE3 的区别
 
-- 1、vue2和vue3双向数据绑定原理不同
+- 1、双向绑定原理变化
 
 vue2 的双向数据绑定是利用ES5 的一个 API `Object.definePropert()`对数据进行劫持 结合 发布订阅模式的方式来实现的。
 
@@ -24,32 +24,11 @@ Proxy 不需要初始化的时候遍历所有属性，另外有多层属性嵌�
 3.x版本中，支持片段，即一个组件可以拥有多个根节点。
 
 
-- 3、自定义指令
-
-API已重命名，以便更好地与组件生命周期保持一致
-
-自定义指令将由子组件通过 v-bind="$attrs"
-
-```
-bind → beforeMount
-inserted → mounted
-beforeUpdate：新的！这是在元素本身更新之前调用的，很像组件生命周期钩子。
-update → 移除！有太多的相似之处要更新，所以这是多余的，请改用 updated。
-componentUpdated → updated
-beforeUnmount：新的！与组件生命周期钩子类似，它将在卸载元素之前调用。
-unbind -> unmounted
-```
-
-- 4、过滤器
-
-2.x版本中，开发者可以使用过滤器来处理通用文本格式。
-
-3.x版本中，过滤器已删除，不再支持。建议用计算属性或方法代替过滤器，而不是使用过滤器。
-
-
-- 5、生命周期钩子不同
+- 3、生命周期钩子函数的变化
 
 3.x版本中， 生周期钩子不是全局可调用的了，需要另外从vue中引入
+
+2.x -> 3.0
 
 ```
 beforeCreate -> use setup()
@@ -58,10 +37,10 @@ beforeMount -> onBeforeMount
 mounted -> onMounted
 beforeUpdate -> onBeforeUpdate
 updated -> onUpdated
-beforeDestroy -> onBeforeUnmount
-destroyed -> onUnmounted
 activate -> onActivated
 deactivated -> onDeactivated
+beforeDestroy -> onBeforeUnmount
+destroyed -> onUnmounted
 errorCaptured -> onErrorCaptured
 ```
 Vue3中使用两个全新的钩子函数来进行调试。他们是：
@@ -80,6 +59,28 @@ export default {
   }
 }
 ```
+
+
+- 4、自定义指令钩子函数的变更
+
+2.x -> 3.0
+
+```
+bind → beforeMount
+inserted → mounted
+beforeUpdate：新的！这是在元素本身更新之前调用的，很像组件生命周期钩子。
+update → 移除！有太多的相似之处要更新，所以这是多余的，请改用 updated。
+componentUpdated → updated
+beforeUnmount：新的！与组件生命周期钩子类似，它将在卸载元素之前调用。
+unbind -> unmounted
+```
+
+- 5、过滤器
+
+2.x版本中，开发者可以使用过滤器来处理通用文本格式。
+
+3.x版本中，过滤器已删除，不再支持。建议用计算属性或方法代替过滤器，而不是使用过滤器。
+
 
 - 6、api的不同
 
@@ -103,6 +104,33 @@ b.渲染函数 API
 3.x版本中，h函数 是全局导入的，而不是作为参数自动传递。
 
 render 函数不再接收任何参数，它将主要用于 setup() 函数内部
+
+c.事件 API
+
+2.x版本中，Vue 实例可用于触发通过事件触发 API 强制附加的处理程序 ($on，$off 和 $once)，
+用于创建 event hub，以创建在整个应用程序中使用的全局事件侦听器:
+
+```
+const install = function (Vue) {
+  const Bus = new Vue({
+    methods: {
+      emit (event, ...args) {
+        this.$emit(event, ...args)
+      },
+      on (event, callback) {
+        this.$on(event, callback)
+      },
+      off (event, callback) {
+        this.$off(event, callback)
+      }
+    }
+  })
+  Vue.prototype.$bus = Bus
+}
+export default install
+```
+
+3.x版本中，$on，$off 和 $once 实例方法已被移除，应用实例不再实现事件触发接口
 
 
 - 7、prop 默认函数中访问this的不同
@@ -128,5 +156,6 @@ context - Vue3 暴露出来的属性（emit，slots，attrs）
 2.x 版本中，使用 Vue.set 来给对象新增一个属性时，这个对象的所有 watcher 都会重新运行；
 
 3.x 版本中，只有依赖那个属性的 watcher 才会重新运行。
+
 
 
