@@ -74,7 +74,7 @@ React无法从模版层面进行静态分析，开发者在项目中开发 babel
 ![](./images/react-parse.jpeg)
 
 
-5、Vuex 和 Redux
+5、状态管理
 
 从实现原理上来说，最大的区别是两点：
 
