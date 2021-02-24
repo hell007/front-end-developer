@@ -6,13 +6,15 @@ vue2 的双向数据绑定是利用ES5 的一个 API `Object.definePropert()`对
 
 vue3中使用了 es6 的 `Proxy`API 对数据代理。
 
-> Proxy 相对于 Object.defineProperty 的优势：
+```
+Proxy 相对于 Object.defineProperty 的优势：
 代码的执行效果更快
 Proxy 可以直接监听对象而非属性
 Proxy 可以直接监听数组的变化
 Proxy 有多达 13 种拦截方法,不限于 apply、ownKeys、deleteProperty、has 等等是 Object.defineProperty 不具备的
 Proxy 返回的是一个新对象,我们可以只操作新的对象达到目的,而 Object.defineProperty 只能遍历对象属性直接修改
 Proxy 不需要初始化的时候遍历所有属性，另外有多层属性嵌套的话，只有访问某个属性的时候，才会递归处理下一级的属性
+```
 
 
 >2、片段(碎片Fragments)
@@ -22,7 +24,7 @@ Proxy 不需要初始化的时候遍历所有属性，另外有多层属性嵌�
 3.x版本中，支持片段，即一个组件可以拥有多个根节点。
 
 
-3、自定义指令
+>3、自定义指令
 
 API已重命名，以便更好地与组件生命周期保持一致
 
@@ -38,14 +40,14 @@ beforeUnmount：新的！与组件生命周期钩子类似，它将在卸载元�
 unbind -> unmounted
 ```
 
-4、过滤器
+>4、过滤器
 
 2.x版本中，开发者可以使用过滤器来处理通用文本格式。
 
 3.x版本中，过滤器已删除，不再支持。建议用计算属性或方法代替过滤器，而不是使用过滤器。
 
 
-5、生命周期钩子不同
+>5、生命周期钩子不同
 
 3.x版本中， 生周期钩子不是全局可调用的了，需要另外从vue中引入
 
@@ -79,7 +81,7 @@ export default {
 }
 ```
 
-6、api的不同
+>6、api的不同
 
 a. Options API - Composition API
 
@@ -103,7 +105,7 @@ b.渲染函数 API
 render 函数不再接收任何参数，它将主要用于 setup() 函数内部
 
 
-7、prop 默认函数中访问this的不同
+>7、prop 默认函数中访问this的不同
 
 2.x版本中，this代表的是当前组件，可以直接使用this访问prop属性值。
 
@@ -115,14 +117,7 @@ context - Vue3 暴露出来的属性（emit，slots，attrs）
 ```
 
 
-6、 懒观察（lazy observation）不同
-
-在 2.x 版本里，不管数据多大，都会在一开始就为其创建观察者。当数据很大时，这可能会在页面载入时造成明显的性能压力。
-
-3.x 版本，只会对「被用于渲染初始可见部分的数据」创建观察者，而且 3.x 的观察者更高效。
-
-
-7、 变更通知不同
+>8、 变更通知不同
 
 2.x 版本中，使用 Vue.set 来给对象新增一个属性时，这个对象的所有 watcher 都会重新运行；
 
