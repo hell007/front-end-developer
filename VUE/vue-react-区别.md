@@ -1,6 +1,8 @@
+## VUE和REACT的主要差别
+
 1、理念上的差别
 
-Vue 是通过对数据的劫持/代理一系列操作来进行数据的变化。
+Vue 是通过对数据的劫持/代理一系列操作来进行数据的变化。默认就是优化状态：你修改了多少数据，就触发多少更新。
 
 React 推崇函数式，数据的变化是通过直接进行局部重新渲染。
 
@@ -8,9 +10,7 @@ React 推崇函数式，数据的变化是通过直接进行局部重新渲染�
 
 React setState 引起局部重新刷新。为了达到更好的性能，React 暴漏给开发者 shouldComponentUpdate 这个生命周期 hook，来避免不需要的重新渲染。
 
-Vue 由于采用依赖追踪，默认就是优化状态：你动了多少数据，就触发多少更新，不多也不少。
-
-React 对数据变化毫无感知，它就提供 React.createElement 调用已生成 virtual dom。
+React 对数据变化毫无感知，它就提供 React.createElement 调用生成 virtual dom。
 
 另外 React 为了弥补不必要的更新，会对 setState 的行为进行合并操作。因此 setState 有时候会是异步更新，但并不是总是“异步”。
 
