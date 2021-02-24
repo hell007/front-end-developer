@@ -110,6 +110,7 @@ c.事件 API
 2.x版本中，Vue 实例可用于触发通过事件触发 API 强制附加的处理程序 ($on，$off 和 $once)，
 用于创建 event hub，以创建在整个应用程序中使用的全局事件侦听器:
 
+兄弟组件间的通讯
 ```
 const install = function (Vue) {
   const Bus = new Vue({
