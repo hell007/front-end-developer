@@ -43,7 +43,27 @@ beforeDestroy -> onBeforeUnmount
 destroyed -> onUnmounted
 errorCaptured -> onErrorCaptured
 ```
-Vue3中使用两个全新的钩子函数来进行调试。他们是：
+
+Vue2中，errorCaptured是 2.5.0 新增的一个生命钩子函数，当捕获到一个来自子孙组件的错误时被调用。
+此钩子会收到三个参数：错误对象、发生错误的组件实例以及一个包含错误来源信息的字符串。此钩子可以返回 false 以阻止该错误继续向上传播。
+
+在父组件的errorCaptured则能够捕获到信息:
+
+```
+errorCaptured(err, vm, info) {
+  console.log(`错误信息: ${err.toString()}\n info: ${info}`); 
+  return false;
+}
+```
+
+```
+错误信息: TypeError: dontexist is not a function
+info: render
+```
+
+
+
+Vue3中可以使用两个全新的钩子函数来进行调试。他们是：
 
 ```
 onRenderTracked
@@ -157,6 +177,11 @@ context - Vue3 暴露出来的属性（emit，slots，attrs）
 2.x 版本中，使用 Vue.set 来给对象新增一个属性时，这个对象的所有 watcher 都会重新运行；
 
 3.x 版本中，只有依赖那个属性的 watcher 才会重新运行。
+
+
+
+
+
 
 
 
