@@ -1,11 +1,11 @@
 ## REACT 
 
-- React 【生命周期】三个阶段生命周期函数、不同生命周期详解、图解生命周期
+##### React 【生命周期】三个阶段生命周期函数、不同生命周期详解、图解生命周期
 
 [详解](https://www.cnblogs.com/xiaoxuStudy/p/13369586.html?tt_from=copy_link&utm_source=copy_link&utm_medium=toutiao_ios&utm_campaign=client_share)
 
 
-- 状态组件（类组件） 和 无状态组件（函数组件）
+##### 状态组件（类组件） 和 无状态组件（函数组件）
 
 有状态组件主要用来定义交互逻辑和业务数据，使用{this.state.xxx}的表达式把业务数据挂载到容器组件的实例上，
 然后传递props到函数组件，函数组件接收到props，把props塞到模板里面。
@@ -13,7 +13,7 @@
 无状态组件主要用来定义模板，接收来自父组件props传递过来的数据，使用{props.xxx}的表达式把props塞到模板里面。
 
 
-- 哪些生命周期中可以修改组件的state
+##### 哪些生命周期中可以修改组件的state
 
   componentDidMount和componentDidUpdate
 
@@ -22,14 +22,18 @@
   componentWillUpdate中setState会导致死循环
 
 
-- react中component和pureComponent区别是什么？
+##### react中component和pureComponent区别是什么？
 
 PureComponent自带通过props和state的浅对比来实现 shouldComponentUpate()，
 而Component没有比于Component，PureCompoent的性能表现将会更好
 
 
+##### react hooks
 
-- React-render-props和高阶组件
+[详解](https://blog.csdn.net/kellywong/article/details/106430977?tt_from=copy_link&utm_source=copy_link&utm_medium=toutiao_ios&utm_campaign=client_share)
+
+
+##### React-render-props和高阶组件
 
 [使用](https://www.cnblogs.com/xiaowzi/p/12368706.html)
 
