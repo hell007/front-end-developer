@@ -1,11 +1,21 @@
 ## mac homebrew 常用命令
 
-mac 系统常用的软件安装工具就是 homebrew, 其最常用的命令如下：
-
+### mac 安装homebrew
 
 安装（需要 Ruby）：
-ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 
+	ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+
+
+### 修改镜像源
+
+	cd /usr/local/Homebrew/Library/Taps/homebrew
+
+	git clone git://mirrors.ustc.edu.cn/homebrew-core.git
+
+
+
+### 常用的命令如下
 
 - 列出: brew list 列出已安装的软件
 
