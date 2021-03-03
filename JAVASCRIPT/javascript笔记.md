@@ -244,7 +244,15 @@ var 变量=document.createElement('标签名')	创建元素并且保存到一个
 
 ## 类型
 
->js的基本数据类型：	string 字符串 、number	数字、boolean	布尔值、object	对象、undefined 未定义的、 null 空值、function	函数
+>js的基本数据类型：	
+
+string 字符串 、
+number	数字、
+boolean	布尔值、
+undefined 未定义的、 
+null 空值
+
+>引用类型：object、Array和Function
 
 ##### typeof	用来判断类型的查看变量类型的属于运算符
 	
