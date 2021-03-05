@@ -10,7 +10,7 @@
 ### 修改镜像源
 
 	cd /usr/local/Homebrew/Library/Taps/homebrew
-
+	
 	git clone git://mirrors.ustc.edu.cn/homebrew-core.git
 
 
@@ -18,6 +18,10 @@
 ### 常用的命令如下
 
 - 列出: brew list 列出已安装的软件
+
+- 列出服务：brew services list
+
+- 启动服务：brew services start mysql
 
 - 搜索：brew search mysql
 
@@ -37,8 +41,10 @@
 
 - 清理：brew cleanup 清理不需要的版本极其安装包缓存
 
-		brew cleanup
-		brew cleanup mysql
+   ```
+   brew cleanup
+   brew cleanup mysql
+   ```
 
 - brew home  *   —用浏览器打开
 
