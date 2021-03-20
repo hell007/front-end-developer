@@ -189,6 +189,25 @@ cells	列，节点(复数，所以有下标)
 
 
 
+### 3、定时器
+
+#### 3.1、开启
+
+	setInterval 间隔每秒发生事件(连续)
+	setTimeout 时间到了后发生一次事件（如果出现渲染问题，找到问题所在，然后就用延迟定时器）
+	定时器里的第一个参数是每次执行的函数，第2为时间，第3个参数是传参，然后这个被传的参数会在定时器的第一个参数也就是函数里的第一个参数就是被传进去的参数
+
+```
+	setTimeout(function(){},1000);
+```
+
+#### 3.2、停止
+
+	clearInterval 停止间隔定时器
+	clearTimeout 停止延迟定时器
+
+
+
 
 ## 元素创建与输出
 
@@ -241,8 +260,94 @@ currentStyle	专门兼容IE的
 
 
 
+## 事件
 
-## 类型
+### 1、概念
+
+事件捕获指的是从document到触发事件的那个节点，即自上而下的去触发事件。
+
+事件冒泡是自下而上的去触发事件。
+
+绑定事件方法的第三个参数，就是控制事件触发顺序是否为事件捕获。true,事件捕获；false,事件冒泡。默认false,即事件冒泡。
+
+Jquery的e.stopPropagation会阻止冒泡，意思就是到我为止.
+
+### 2、绑定事件监听
+
+绑定事件的另一种方法是用 addEventListener() 或 attachEvent() 来绑定事件监听函数。
+
+W3C规范中定义了3个事件阶段，依次是捕获阶段、目标阶段、冒泡阶段。
+
+
+```
+<div id="parent">
+　　<div id="child" class="child"></div>
+</div>
+```
+
+### 3、事件捕获
+
+	document.getElementById("parent").addEventListener("click",function(e){
+	    alert("parent事件被触发，"+e.target.id);
+	},true)
+	
+	document.getElementById("child").addEventListener("click",function(e){
+		alert("child事件被触发，"+e.target.id)
+	}, true)
+
+结果：parent事件被触发, child事件被触发
+结论：先parent,然后child。事件触发顺序变更为自外向内，这就是事件捕获。 
+
+### 4、事件冒泡    
+
+	document.getElementById("parent").addEventListener("click",function(e){
+	    alert("parent事件被触发，"+e.target.id);
+	}, false)
+	      		
+	document.getElementById("child").addEventListener("click",function(e){
+		alert("child事件被触发，"+e.target.id)
+	}, false)
+
+
+​	
+
+结果：child事件被触发, parent事件被触发
+结论：先child，然后parent。事件的触发顺序自内向外，这就是事件冒泡
+
+### 5、事件委托/事件代理
+
+事件委托，其实是使用了冒泡的原理，从点击的元素开始，递归方式的向父元素传播事件，这样做的好处是对于大量要处理的元素，不必为每个元素都绑定事件，只需要在他们的父元素上绑定一次即可，提高性能。 还有一个好处就是可以处理动态插入dom中的元素，直接绑定的方式是不行的。
+
+>应用场景：就是为多个相同的dom节点绑定一个事件即可
+
+### 6、注销事件绑定
+
+一般普通事件绑定的直接让那个事件等于null即可注销绑定
+对象.removeEventListener()	注销被	addEventListener()绑定的事件，而且要在同一个阶段注销
+
+对象.detachEvent()	注销被	attachEvent()绑定的事件
+匿名函数是没有办法被注销的
+
+### 7、消息队列和事件循环 (注意)
+
+消息队列：消息队列是一个先进先出的队列，它里面存放着各种消息
+
+事件循环：事件循环是指主线程重复从消息队列中取消息、执行的过程。
+
+实际上，主线程只会做一件事情，就是从消息队列里面取消息、执行消息，再取消息、再执行。当消息队列为空时，就会等待直到消息队列变成非空。而且主线程只有在将当前的消息执行完成后，才会去取下一个消息。这种机制就叫做事件循环机制，取一个消息并执行的过程叫做一次循环
+
+用图表示这个过程就是
+
+![](images/eventLoop.png)
+
+>总结：异步过程的回调函数，一定不在当前这一轮事件循环中执行
+
+
+
+
+
+
+## js数据类型
 
 ### 1、5种基本数据类型	
 
@@ -339,7 +444,7 @@ null 空值
 
 ​	
 
-## Array 数组类
+## Array 
 
 除了 Object 之外， Array 类型恐怕是 ECMAScript 中最常用的类型了。而且，ECMAScript 中的数组与其他多数语言中的数组有着相当大的区别。虽然 ECMAScript 数组与其他语言中的数组都是数据的有序列表，但与其他语言不同的是，ECMAScript 数组的每一项可以保存任何类型的数据。也就是说，可以用数组的第一个位置来保存字符串，用第二位置来保存数值，用第三个位置来保存对象，以此类推。而且，CMAScript 数组的大小是可以动态调整的，即可以随着数据的添加自动增长以容纳新增数据。
 
@@ -617,417 +722,554 @@ Array.from(obj,fn) 可以把带有lenght属性类似数组的对象转换为数�
 
 
 
-## 事件
+## object
 
-### 1、概念
+### 1、简介
 
-事件捕获指的是从document到触发事件的那个节点，即自上而下的去触发事件。
+JavaScript 原生提供Object对象
 
-事件冒泡是自下而上的去触发事件。
+JavaScript 的所有其他对象都继承自Object对象，即那些对象都是Object的实例。
 
-绑定事件方法的第三个参数，就是控制事件触发顺序是否为事件捕获。true,事件捕获；false,事件冒泡。默认false,即事件冒泡。
+Object对象的原生方法分成两类：Object自身的方法与Object的实例方法。
 
-Jquery的e.stopPropagation会阻止冒泡，意思就是到我为止.
+- Object对象自身的方法
 
-### 2、绑定事件监听
-
-绑定事件的另一种方法是用 addEventListener() 或 attachEvent() 来绑定事件监听函数。
-
-W3C规范中定义了3个事件阶段，依次是捕获阶段、目标阶段、冒泡阶段。
-
+所谓”自身的方法“就是直接定义在Object对象的方法。
 
 ```
-<div id="parent">
-　　<div id="child" class="child"></div>
-</div>
+Object.print = function (o) { 
+	console.log(o) 
+};
 ```
 
-### 3、事件捕获
+上面代码中，print方法就是直接定义在Object对象上。
 
-	document.getElementById("parent").addEventListener("click",function(e){
-	    alert("parent事件被触发，"+e.target.id);
-	},true)
-	
-	document.getElementById("child").addEventListener("click",function(e){
-		alert("child事件被触发，"+e.target.id)
-	}, true)
+Object的实例方法
 
-结果：parent事件被触发, child事件被触发
-结论：先parent,然后child。事件触发顺序变更为自外向内，这就是事件捕获。 
-
-### 4、事件冒泡    
-
-	document.getElementById("parent").addEventListener("click",function(e){
-	    alert("parent事件被触发，"+e.target.id);
-	}, false)
-	      		
-	document.getElementById("child").addEventListener("click",function(e){
-		alert("child事件被触发，"+e.target.id)
-	}, false)
-
-
-​	
-
-结果：child事件被触发, parent事件被触发
-结论：先child，然后parent。事件的触发顺序自内向外，这就是事件冒泡
-
-### 5、事件委托/事件代理
-
-事件委托，其实是使用了冒泡的原理，从点击的元素开始，递归方式的向父元素传播事件，这样做的好处是对于大量要处理的元素，不必为每个元素都绑定事件，只需要在他们的父元素上绑定一次即可，提高性能。 还有一个好处就是可以处理动态插入dom中的元素，直接绑定的方式是不行的。
-
->应用场景：就是为多个相同的dom节点绑定一个事件即可
-
-### 6、注销事件绑定
-
-一般普通事件绑定的直接让那个事件等于null即可注销绑定
-对象.removeEventListener()	注销被	addEventListener()绑定的事件，而且要在同一个阶段注销
-
-对象.detachEvent()	注销被	attachEvent()绑定的事件
-匿名函数是没有办法被注销的
-
-### 7、消息队列和事件循环 (注意)
-
-消息队列：消息队列是一个先进先出的队列，它里面存放着各种消息
-
-事件循环：事件循环是指主线程重复从消息队列中取消息、执行的过程。
-
-实际上，主线程只会做一件事情，就是从消息队列里面取消息、执行消息，再取消息、再执行。当消息队列为空时，就会等待直到消息队列变成非空。而且主线程只有在将当前的消息执行完成后，才会去取下一个消息。这种机制就叫做事件循环机制，取一个消息并执行的过程叫做一次循环
-
-用图表示这个过程就是
-
-![](images/eventLoop.png)
-
->总结：异步过程的回调函数，一定不在当前这一轮事件循环中执行
-
-
-
-
-## 定时器
-
-### 1、开启
-
-	setInterval 间隔每秒发生事件(连续)
-	setTimeout 时间到了后发生一次事件（如果出现渲染问题，找到问题所在，然后就用延迟定时器）
-	定时器里的第一个参数是每次执行的函数，第2为时间，第3个参数是传参，然后这个被传的参数会在定时器的第一个参数也就是函数里的第一个参数就是被传进去的参数
+所谓实例方法就是定义在Object原型对象Object.prototype上的方法。它可以被Object实例直接使用。
 
 ```
-	setTimeout(function(){},1000);
-```
+Object.prototype.print = function () {
+  console.log(this);
+};
 
-### 2、停止
-
-	clearInterval 停止间隔定时器
-	clearTimeout 停止延迟定时器
-
-
-
-
-## JSON
-
-### 1、概念
-
-系统已经内置的对象，不需要再存在一个变量里就可以用这个对象（使用这个对象的方法进行转换的时候都是用严格模式进行转换的）
-
-注意：属于特别的方法（IE6/7没有这个对象跟方法的，所以可以在JSON官网下，下载一个JS库来做引用然后就可以兼容）
-
-### 2、方法	
-
-JSON.parse() 把json形式的字符串转换成源生的js代码（安全性高，必须是严格模式的）
-
-JSON.stringify() 把一个对象转换成一段字符串
-
-eval()	可以把任何的字符串转成源生的javascript代码(这个方法是原生的，兼容所有，但是安全性不高)
-
-
-
-
-## 时间
-
-new Date	获取到当前本地时间(全部)
-
-+new Date === new Date().getTime()	获取当前时间的毫秒,也就是把时间对象转换成了时间戳
-
-### 1、获取
-
-getFullYear()	年
-
-getMonth()	获取当前月份(0-11,0代表1月),所以 +1
-
-getDate()	获取当前日(1-31)
-
-getDay()	获取当前星期X(0-6,0代表星期天)
-
-getTime() 获取当前时间(从1970.1.1开始的毫秒数)
-
-getHours()	时
-
-getMinutes()	分
-
-getSeconds()	秒
-
-getMilliseconds()	毫秒
-
-### 2、设置（用这些方法会转换成时间戳）
-
-new Date().setFullYear(2015);	设置年份到具体的某一年
-
-new Date().setMonth(4);	设置月份到指定的月
-
-new Date().setDate(20);	设置日期到指定的某一天
-
-
-
-### 3、将时间戳转换成时间格式
-
-	export const formatDate  = (ns) => {
-	  let d = new Date(ns);
-	  let m = d.getMonth() + 1;
-	  let t = d.getDate();
-	  let h = d.getHours();     
-	  let min = d.getMinutes();     
-	  let s = d.getSeconds();  
-	  if (m < 10) {
-	    m = '0' + m.toString()
-	  }
-	  if (t < 10) {
-	    t = '0' + t.toString()
-	  }
-	  let str = d.getFullYear().toString() + "-" + m + "-" + t + " " + h + ":" + min + ":" + s;
-	  return str
-	}
-
-### 4、时间格式(2014-02-02 14:10:00)转换成时间戳
-
-	export const formatTimestamp = (date) => {
-	  var arr = date.replace(/:/g,"-").replace(/ /g,"-").split("-");
-	  var timestamp = new Date(Date.UTC(arr[0],arr[1]-1,arr[2],arr[3]-8,arr[4],arr[5]));
-	  return timestamp.getTime();
-	}
-
-### 5、时间转换公式
-
-	天：Math.floor(t/86400)
-	
-	时：Math.floor(t%86400/3600)
-	
-	分：Math.floor(t%86400%3600/60)
-	
-	秒：t%60
-
- 
-
-
-
-## 正则表达式
-
-### 1、定义
-
-	var re = new RegExp();//RegExp是一个对象,和Aarray一样  
-	//但这样没有任何效果,需要将正则表达式的内容作为字符串传递进去  
-	re = new RegExp("a");//最简单的正则表达式,将匹配字母a  
-	re = new RegExp("a","i");//第二个参数,表示匹配时不分大小写 
-
-RegExp构造函数第一个参数为正则表达式的文本内容,而第二个参数则为可选项标志，标志可以组合使用
-
-•g （全文查找） 
-•i （忽略大小写） 
-•m （多行查找）
+var obj = new Object();
+obj.print() // Object
 
 ```
-var re = new RegExp("a","gi");//匹配所有的a或A 
-```
 
-正则表达式还有另一种正则表达式字面量的声明方式
+上面代码中，Object.prototype定义了一个print方法，然后生成一个Object的实例obj。obj直接继承了Object.prototype的属性和方法，可以直接使用obj.print调用print方法。也就是说，obj对象的print方法实质上就是调用Object.prototype.print方法。
 
-```
-var re = /a/gi;  
-```
+>凡是定义在Object.prototype对象上面的属性和方法，将被所有实例对象共享就可以了。
 
-### 2、方法
+### 2、Object()
 
-正则.test(str)	判断字符串是否有正则匹配到的内容，返回布尔值
+1、Object本身是一个函数，可以当作工具方法使用，将任意值转为对象。这个方法常用于保证某个值一定是对象。
 
-str.search(正则)	 检索与正则表达式相匹配的值===返回正则匹配到字符串第一个出现的位置 （ 跟indexof一样匹配失败返回-1 ）
-
-str.match(正则)	找到一个或多个正则表达式的匹配===查找字符串中符合正则表达式匹配的整个的全部内容，并把匹配的结果作为数组对象返回 （匹配失败返回 null 类型）
-
-正则.exec(str)	如上，但是不支持多次,也就是不支持g查找,只返回第一次匹配到的全部内容和所有匹配的子项与匹配到的位置跟拿来匹配的字符串都做为数组返回。
-
-str.split(正则)	把字符串分割为字符串数组===分隔查找到字符串里面符合正则匹配到的为分隔线，把左右两边的数据分隔，然后分别添加到数组，并返回这个数组
-
-正则.compile("新正则")	可以在某个过程中，重新修改正则的规则（有待测试，证实结论2015/2/6/00:30）
-
-str.replace(正则，替换内容)  替换与正则表达式匹配的子串===替换返回被替换后的str,不直接对原有的str进行修改。第2个参数可以是函数(匹配到一次执行一次)，并函数的(a,b,c,d)除a是匹配到全部以外，其他是按照顺序的子项
-
-### 3、详解
-
-	语法
-	
-	//d+|[1234-6^7-9 | abc | /w]/g	
-	
-	找到是数字的，+把连接起来（量词）,g是修饰符，找到全部找完，默认是单找一个(正则特性,懒惰)，|（一样是‘或’的意思）
-	
-	在这个//里，要找到什么就直接写就是找到什么。比如找abc就直接写/abc/,但不会匹配到ab这样的只有满足全部条件abc才会被找到
-	| 的意思就是或者的意思 是一个单竖线
-	()表示的是一个整体，被包的是一个整体的意思,并且从左边到右边，左边第一个被包起来的是整个匹配到的字符串的一个第一个子项
-	[] 里面的也会被解析成只找一位，里面的会被单独拆出来当做一位去查找。也可以说是 | 的意思。不过他的特点是可以用链接式，如 1-9 a-z 就相当于在里面写了 [1到9]
-	^ 在 [] 的意思就是以外的东西，如 ^6-7 等于 67以外的所有,注意，不在【】里面的话，它的意思是行首，字符串开头
-	$ 行尾
-	. 的意思是除了换行的任意字符 （但如果是/.的话 就是真正的符号	.	的意思）
-	i是修饰符，就是匹配的规则不区分大小写
-	
-	/d{2,6}	最少2次，最多6次
-	{2,}	最少2次，最多不限
-	{2}	只能2次
-	*	最少0次，最多不限
-	?	最少0次，最多1次	等同{0,1}
-	+	最少1次，最多不限	等同{1,}
-	
-	(?=要匹配的)	前向申明，意思就是要匹配的必须 跟在 前面的后一位，但是又不要匹配到 被前向申明匹配到的
-	(?!要匹配的)	反前向申明,也就是要匹配的不能在前面的后一位出现，其他的都可以，同样只匹配到前面一位。被申明的都是不会匹配到的，只是要求在后面
-
-### 4、表达运算
-
-	/数字	整个表达式里的第几个子项的指向,也就是/num的这一位必须是子项匹配到的而不是匹配子项的那个条件，如/(a)(b)(c)/1/	那成功的话就要是 abca
-	
-	/d	一个数字
-	/D	非数字
-	/w	数字，字母，下划线
-	/W	非数字，非字母，非下划线
-	/s	空格
-	/S	非空格
-	/b	边界符（这个是看不到的，首先要满足/w的表达）（起始，结束，包括匹配元素前面或后面有空格的话，也会算是开始跟结束，但是匹配的是不能算是空格的）
-	/B	非边界符
-	/f	换页符
-	/n	换行符
-	/r	回车符
-	/t	制符表
-	/v	垂直制符表
-
-
-
-
-## cookie储存 [js-cookie](https://github.com/js-cookie/js-cookie)
-
-	1.cookie 的大小是有限制的	
-	2.cookie 的条数是有限制的	
-	3.cookie 可以设置有效期	
-	4.不同浏览器所产生的cookie是不能相同访问	
-	5.只能访问自己域名下的cookie，不能访问其它域名的cookie
-	6.cookie 是一个字符串信息，也只能存放字符串信息	7.有固定格式，一次设置多个的时候值后面+	分号空格 跟下一个要存的区分开来
-	7.默认情况下，当浏览器关闭时，cookie自动失效除非设置了一个未来的过期时间
-
-
-
-## AJAX
-
-### 1、Ajax对象创建
+如果参数为空（或者为undefined和null），Object()返回一个空对象。
 
 ```
-var xhr = new XMLHttpRequest()	
+var obj = Object();
+// 等同于
+var obj = Object(undefined);
+var obj = Object(null);
+
+obj instanceof Object // true
 ```
 
-首先要申明AJAX对象 （注意，IE6这个对象没有，并且如果判断的话，也要在前面加上window后拿去判断）new ActiveXObject('Microsoft.XMLHTTP')（IE6里面的插件，去支持AJAX）
+上面代码的含义，是将undefined和null转为对象，结果得到了一个空对象obj。
 
-并且它有2种方法提交
+2instanceof运算符用来验证，一个对象是否为指定的构造函数的实例。obj instanceof Object返回true，就表示obj对象是Object的实例。
 
-1.get	通过地址栏的“？”后面传递数据，如果多个数据还会用“&”连接起来。并且会被缓存，传输到后端如果有中文的时候还要进行转URL编码
+如果参数是原始类型的值，Object方法将其转为对应的包装对象的实例
 
-GET方式提交的地址是会被浏览器缓存的，要解决这个缓存问题就可以在提交数据的时候顺便把时间戳也加到数据的最后一个
-	
-2.post	通过请求头传输,它传输输入是在send方法的时候把输入当参数传过去的。不会被缓存,
-	
-	
+```
+var obj = Object(1);
+obj instanceof Object // true
+obj instanceof Number // true
 
-无论是ajax还是cookie	在传输带有中文的时候应该先转换成URI编码，可用window下的	encodeURI('string') 方法进行转换，但post传的时候因为申明了请求头，已经进行了转码
+var obj = Object('foo');
+obj instanceof Object // true
+obj instanceof String // true
 
-对象.responseText 服务器返回的内容就存在这个属性里面(默认string类型)
+var obj = Object(true);
+obj instanceof Object // true
+obj instanceof Boolean // true
+```
 
-对象.readyState	Ajax的工作状态（0.初始化。 1.载入，发送请求。 2.载入完成。收到发送的所有请求并返回。 3.解析响应的内容。 4.完成，解析完成,可以继续下面的操作）
-这个方法一般用在	onreadystatechange事件里面 如果状态完成，就可以执行改做的事情了
+上面代码中，Object函数的参数是各种原始类型的值，转换成对象就是原始类型值对应的包装对象。
 
-对象.status	服务器的状态值。（查询 HTTP状态吗 一般为3位数字的数值）（一般为200就是请求到正确的后端文件）（可以确认Ajax的工作是否正常完成了，还是报错）
+如果Object方法的参数是一个对象，它总是返回该对象，即不用转换。
 
-### 2、属性，方法
+```
+var arr = [];
+var obj = Object(arr); // 返回原数组
+obj === arr // true
 
-对象.open	打开，并传输到指定地址（一：方式(get,post)，二：文件跟get的？的传输，三是否异步）
+var value = {};
+var obj = Object(value) // 返回原对象
+obj === value // true
 
-对象.setRequestHeader('content-type', 'application/x-www-form-urlencoded')	申明发送的数据类型（这一步一般是post方式的时候才需要，get方式不需要）
+var fn = function () {};
+var obj = Object(fn); // 返回原函数
+obj === fn // true
+```
 
-对象.send()	open是打开的话，send就是确认的意思了。（而且POST提交方式的数据是放到这里来的，数据方式是一样的）
+利用这一点，可以写一个判断变量是否为对象的函数。
 
-### 3、属性，事件
+function isObject(value) {
+  return value === Object(value);
+}
 
-对象.onreadystatechange	监听Ajax的状态值发生改变的时候触发的事件
+isObject([]) // true
+isObject(true) // false
 
+### 3、Object 构造函数  
 
+Object不仅可以当作工具函数使用，还可以当作构造函数使用，即前面可以使用new命令。
 
-## http协议
+Object构造函数的首要用途，是直接通过它来生成新对象。
 
+```
+var obj = new Object();
+```
 
+**注意:**通过var obj = new Object()的写法生成新对象，与字面量的写法var obj = {}是等价的。或者说，后者只是前者的一种简便写法。
+Object构造函数的用法与工具方法很相似，几乎一模一样。使用时，可以接受一个参数，
+如果该参数是一个对象，则直接返回这个对象；
+如果是一个原始类型的值，则返回该值对应的包装对象。
 
-###  1、定义
+```
+var o1 = {a: 1};
+var o2 = new Object(o1);
+o1 === o2 // true
 
-http协议全称是超文本传输协议，HTTP 协议是以 ASCII 码传输，建立在 TCP/IP 协议之上的应用层规范。规范把 HTTP 请求分为三个部分：状态行、请求头、消息主体。
+var obj = new Object(123);
+obj instanceof Number // true
+```
 
->最基本的方法有4种，分别是GET，POST，PUT，DELETE
+虽然用法相似，但是Object(value)与new Object(value)两者的语义是不同的，
+Object(value)表示将value转成一个对象，
+new Object(value)则表示新生成一个对象，它的值是value。
 
-### 2、http状态行、请求头、消息主体
+### 4、Object构造函数的属性
 
-![](images/http.png)
+Object.length
+值为1。
 
-说明： 
+Object.prototype
+可以为所有 Object 类型的对象添加属性。
 
-	GET override.php表示用get方式请求资源 
-	Accept 表示客户端可以接收任何数据 
-	Accept-Language 页面语言 
-	Accept-Encoding 表示接收什么样的数据压缩格式 Host  主机 
-	User-Agent 告诉我们服务器内核，操作系统 
-	Connection 表示链接方式 不要立即断掉我们的请求 持久连接
-	Referrer  表示我是从哪里来 防盗链 
-	  
-	如果我这个http2.php ， 不希望192.168.0.3的访问在服务器端，我们可以通过一个$_SERVER 来获取我们需要的信息  
-	重要的有： 
-	HTTP_HOST=localhost 
-	REMOTE_ADDR=127.0.0.1 访问该页面的IP 
-	DOCUMENT_ROOT=G:/zhentuan  可以获取apache的主目录 REQUEST_URI=/http2.php 可以获取请求的资源名
+### 5、Object构造函数的方法
 
-### 3、get/post 区别与联系  
+```
+Object.assign()
+通过复制一个或多个对象来创建一个新的对象。 
 
-	1. 安全性  
-	get请求的数据会显示在地址栏上，post请求的数据放在http协议消息体内 
-	2. 从可以提交的数据的大小来看： 
-	http协议本身并没有限制数据大小 
-	浏览器在对get和post请求做显示， get请求数据2k+35 post请求没有限制 
-	3. Get请求可以更好的添加到收藏夹
+Object.create()
+使用指定的原型对象和属性创建一个新对象。
 
-### 4、 http响应报文 
+Object.defineProperty()
+给对象添加一个属性并指定该属性的配置。
 
-	状态行
-	响应头(Response Header)
-	响应正文 
-	Location:http://www.baidu.org/index.php 
-	HTTP/1.1 200 OK                    200 OK表示客户端请求成功 
-	Server:Microsoft-IIs/5.0           表示告诉浏览器 服务器情况 
-	Date:Thu,13 Jul 2000 05:46:53 GMT  告诉浏览器 请求页面的时间 
-	Content-Length 2291                表示回来的数据有2291字节 
-	Content-Type:text/html             文档类型 
-	Cache-control:private              缓存 
+Object.defineProperties()
+给对象添加多个属性并分别指定它们的配置。
 
-### 5、状态码
+Object.entries()
+返回给定对象自身可枚举属性的[key, value]数组。
 
-	200 OK 客户端请求成功
-	301 Moved Permanently 请求永久重定向
-	302 Moved Temporarily 请求临时重定向
-	304 Not Modified 文件未修改，可以直接使用缓存的文件。
-	400 Bad Request 由于客户端请求有语法错误，不能被服务器所理解。
-	401 Unauthorized 请求未经授权。这个状态代码必须和WWW-Authenticate报头域一起使用
-	403 Forbidden 服务器收到请求，但是拒绝提供服务。服务器通常会在响应正文中给出不提供服务的原因
-	404 Not Found 请求的资源不存在，例如，输入了错误的URL
-	500 Internal Server Error 服务器发生不可预期的错误，导致无法完成客户端的请求。
-	503 Service Unavailable 服务器当前不能够处理客户端的请求，在一段时间之后，服务器可能会恢复正常
+Object.freeze()
+冻结对象：其他代码不能删除或更改任何属性。
 
->2015年，HTTP/2 发布。支持多工（双向的、实时的通信，就叫做多工）
+Object.getOwnPropertyDescriptor()
+返回对象指定的属性配置。
+
+Object.getOwnPropertyNames()
+返回一个数组，它包含了指定对象所有的可枚举或不可枚举的属性名。
+
+Object.getOwnPropertySymbols()
+返回一个数组，它包含了指定对象自身所有的符号属性。
+
+Object.getPrototypeOf()
+返回指定对象的原型对象。
+
+Object.is()
+比较两个值是否相同。所有 NaN 值都相等（这与==和===不同）。
+
+Object.isExtensible()
+判断对象是否可扩展。
+
+Object.isFrozen()
+判断对象是否已经冻结。
+
+Object.isSealed()
+判断对象是否已经密封。
+
+Object.keys()
+返回一个包含所有给定对象自身可枚举属性名称的数组。
+
+Object.preventExtensions()
+防止对象的任何扩展。
+
+Object.seal()
+防止其他代码删除对象的属性。
+
+Object.setPrototypeOf()
+设置对象的原型（即内部[[Prototype]]属性）。
+
+Object.values()
+返回给定对象自身可枚举值的数组
+```
+
+###### 举例
+
+```
+Object.keys()，Object.getOwnPropertyNames()
+
+```
+
+Object.keys方法和Object.getOwnPropertyNames方法都用来遍历对象的属性。
+
+Object.keys方法的参数是一个对象，返回一个数组。该数组的成员都是该对象自身的（而不是继承的）所有属性名。
+
+```
+var obj = {
+  p1: 123,
+  p2: 456
+};
+
+Object.keys(obj) // ["p1", "p2"]
+```
+
+Object.getOwnPropertyNames方法与Object.keys类似，也是接受一个对象作为参数，返回一个数组，包含了该对象自身的所有属性名。
+
+```
+var obj = {
+  p1: 123,
+  p2: 456
+};
+
+Object.getOwnPropertyNames(obj) // ["p1", "p2"]
+```
+
+**注意：** 对于一般的对象来说，Object.keys()和Object.getOwnPropertyNames()返回的结果是一样的。
+只有涉及不可枚举属性时，才会有不一样的结果。Object.keys方法只返回可枚举的属性，Object.getOwnPropertyNames方法还返回不可枚举的属性名。
+
+```
+var a = ['Hello', 'World'];
+
+Object.keys(a) // ["0", "1"]
+Object.getOwnPropertyNames(a) // ["0", "1", "length"]
+
+```
+
+上面代码中，数组的length属性是不可枚举的属性，所以只出现在Object.getOwnPropertyNames方法的返回结果中。
+
+由于 JavaScript 没有提供计算对象属性个数的方法，所以可以用这两个方法代替。
+
+```
+var obj = {
+  p1: 123,
+  p2: 456
+};
+
+Object.keys(obj).length // 2
+Object.getOwnPropertyNames(obj).length // 2
+```
+
+一般情况下，几乎总是使用Object.keys方法，遍历数组的属性。
+
+### 6、Object 实例和Object 原型对象
+
+JavaScript中的所有对象都来自Object；所有对象从Object.prototype继承方法和属性，尽管它们可能被覆盖。
+
+### 7、Object实例属性
+
+```
+Object.prototype.constructor
+特定的函数，用于创建一个对象的原型。
+
+Object.prototype.__proto__ 
+指向当对象被实例化的时候，用作原型的对象。
+
+Object.prototype.__noSuchMethod__ 
+当未定义的对象成员被调用作方法的时候，允许定义并执行的函数。
+
+Object.prototype.__count__ 
+用于直接返回用户定义的对象中可数的属性的数量。已被废除。
+
+Object.prototype.__parent__ 
+用于指向对象的内容。已被废除。
+
+```
+
+### 8、Object实例属性方法
+
+```
+Object.prototype.__defineGetter__()  
+关联一个函数到一个属性。访问该函数时，执行该函数并返回其返回值。
+
+Object.prototype.__defineSetter__()  
+关联一个函数到一个属性。设置该函数时，执行该修改属性的函数。
+
+Object.prototype.__lookupGetter__()  
+返回使用 __defineGetter__ 定义的方法函数 。
+
+Object.prototype.__lookupSetter__()  
+返回使用 __defineSetter__ 定义的方法函数。
+
+Object.prototype.hasOwnProperty()
+返回一个布尔值 ，表示某个对象是否含有指定的属性，而且此属性非原型链继承的。
+
+Object.prototype.isPrototypeOf()
+返回一个布尔值，表示指定的对象是否在本对象的原型链中。
+
+Object.prototype.propertyIsEnumerable()
+判断指定属性是否可枚举，内部属性设置参见 ECMAScript [[Enumerable]] attribute 。
+
+Object.prototype.toSource() 
+返回字符串表示此对象的源代码形式，可以使用此字符串生成一个新的相同的对象。
+
+Object.prototype.toLocaleString()
+直接调用 toString()方法。
+
+Object.prototype.toString()
+返回对象的字符串表示。
+
+Object.prototype.unwatch() 
+移除对象某个属性的监听。
+
+Object.prototype.valueOf()
+返回指定对象的原始值。
+
+Object.prototype.watch() 
+给对象的某个属性增加监听。
+
+Object.prototype.eval() 
+在指定对象为上下文情况下执行javascript字符串代码，已经废弃。
+
+```
+
+举例说明
+
+#### 8.1、Object.prototype.valueOf()
+
+valueOf方法的作用是返回一个对象的“值”，默认情况下返回对象本身。
+
+```
+var obj = new Object();
+obj.valueOf() === obj // true
+```
+
+上面代码比较obj.valueOf()与obj本身，两者是一样的。
+
+valueOf方法的主要用途是，JavaScript 自动类型转换时会默认调用这个方法
+
+```
+var obj = new Object();
+1 + obj // "1[object Object]"
+```
+
+上面代码将对象obj与数字1相加，这时 JavaScript 就会默认调用valueOf()方法，求出obj的值再与1相加。所以，如果自定义valueOf方法，就可以得到想要的结果。
+
+```
+var obj = new Object();
+obj.valueOf = function () {
+  return 2;
+};
+
+1 + o // 3
+
+```
+
+上面代码自定义了obj对象的valueOf方法，于是1 + o就得到了3。这种方法就相当于用自定义的obj.valueOf，覆盖Object.prototype.valueOf。
+
+#### 8.2、Object.prototype.toString()
+
+toString方法的作用是返回一个对象的字符串形式，默认情况下返回类型字符串。
+
+```
+var o1 = new Object();
+o1.toString() // "[object Object]"
+
+var o2 = {a:1};
+o2.toString() // "[object Object]"
+```
+
+上面代码表示，对于一个对象调用toString方法，会返回字符串[object Object]，该字符串说明对象的类型。
+
+字符串[object Object]本身没有太大的用处，但是通过自定义toString方法，可以让对象在自动类型转换时，得到想要的字符串形式。
+
+```
+var obj = new Object();
+
+obj.toString = function () {
+  return 'hello';
+};
+
+obj + ' ' + 'world' // "hello world"
+```
+
+上面代码表示，当对象用于字符串加法时，会自动调用toString方法。由于自定义了toString方法，所以返回字符串hello world。
+
+数组、字符串、函数、Date 对象都分别部署了自定义的toString方法，覆盖了Object.prototype.toString方法。
+
+```
+[1, 2, 3].toString() // "1,2,3"
+
+'123'.toString() // "123"
+
+(function () {
+  return 123;
+}).toString()
+// "function () {
+//   return 123;
+// }"
+
+(new Date()).toString()
+// "Tue May 10 2016 09:11:31 GMT+0800 (CST)"
+
+```
+
+上面代码中，数组、字符串、函数、Date 对象调用toString方法，并不会返回[object Object]，因为它们都自定义了toString方法，覆盖原始方法。
+
+toString() 的应用：判断数据类型
+
+Object.prototype.toString方法返回对象的类型字符串，因此可以用来判断一个值的类型。
+
+```
+var obj = {};
+obj.toString() // "[object Object]"
+
+```
+
+上面代码调用空对象的toString方法，结果返回一个字符串object Object，其中第二个Object表示该值的构造函数。这是一个十分有用的判断数据类型的方法。
+
+由于实例对象可能会自定义toString方法，覆盖掉Object.prototype.toString方法，所以为了得到类型字符串，最好直接使用Object.prototype.toString方法。
+通过函数的call方法，可以在任意值上调用这个方法，帮助我们判断这个值的类型。
+
+```
+Object.prototype.toString.call(value)
+```
+
+上面代码表示对value这个值调用Object.prototype.toString方法。
+
+不同数据类型的Object.prototype.toString方法返回值如下。
+
+```
+数值：返回[object Number]。
+字符串：返回[object String]。
+布尔值：返回[object Boolean]。
+undefined：返回[object Undefined]。
+null：返回[object Null]。
+数组：返回[object Array]。
+arguments 对象：返回[object Arguments]。
+函数：返回[object Function]。
+Error 对象：返回[object Error]。
+Date 对象：返回[object Date]。
+RegExp 对象：返回[object RegExp]。
+其他对象：返回[object Object]。
+这就是说，Object.prototype.toString可以看出一个值到底是什么类型。
+
+Object.prototype.toString.call(2) // "[object Number]"
+Object.prototype.toString.call('') // "[object String]"
+Object.prototype.toString.call(true) // "[object Boolean]"
+Object.prototype.toString.call(undefined) // "[object Undefined]"
+Object.prototype.toString.call(null) // "[object Null]"
+Object.prototype.toString.call(Math) // "[object Math]"
+Object.prototype.toString.call({}) // "[object Object]"
+Object.prototype.toString.call([]) // "[object Array]"
+```
+
+利用这个特性，可以写出一个比typeof运算符更准确的类型判断函数。
+
+```
+var type = function (o){
+  var s = Object.prototype.toString.call(o);
+  return s.match(/\[object (.*?)\]/)[1].toLowerCase();
+};
+
+type({}); // "object"
+type([]); // "array"
+type(5); // "number"
+type(null); // "null"
+type(); // "undefined"
+type(/abcd/); // "regex"
+type(new Date()); // "date"
+```
+
+在上面这个type函数的基础上，还可以加上专门判断某种类型数据的方法。
+
+```
+var type = function (o){
+  var s = Object.prototype.toString.call(o);
+  return s.match(/\[object (.*?)\]/)[1].toLowerCase();
+};
+
+['Null',
+ 'Undefined',
+ 'Object',
+ 'Array',
+ 'String',
+ 'Number',
+ 'Boolean',
+ 'Function',
+ 'RegExp'
+].forEach(function (t) {
+  type['is' + t] = function (o) {
+    return type(o) === t.toLowerCase();
+  };
+});
+
+type.isObject({}) // true
+type.isNumber(NaN) // true
+type.isRegExp(/abc/) // true
+```
+
+#### 8.3、Object.prototype.toLocaleString()
+
+Object.prototype.toLocaleString方法与toString的返回结果相同，也是返回一个值的字符串形式。
+
+```
+var obj = {};
+obj.toString(obj) // "[object Object]"
+obj.toLocaleString(obj) // "[object Object]"
+```
+
+这个方法的主要作用是留出一个接口，让各种不同的对象实现自己版本的toLocaleString，用来返回针对某些地域的特定的值。目前，主要有三个对象自定义了toLocaleString方法。
+
+```
+Array.prototype.toLocaleString()
+Number.prototype.toLocaleString()
+Date.prototype.toLocaleString()
+```
+
+举例来说，日期的实例对象的toString和toLocaleString返回值就不一样，而且toLocaleString的返回值跟用户设定的所在地域相关。
+
+```
+var date = new Date();
+date.toString() // "Tue Jan 01 2018 12:01:33 GMT+0800 (CST)"
+date.toLocaleString() // "1/01/2018, 12:01:33 PM"
+```
+
+#### 8.4、Object.prototype.hasOwnProperty()
+
+Object.prototype.hasOwnProperty方法接受一个字符串作为参数，返回一个布尔值，表示该实例对象自身是否具有该属性。
+
+```
+var obj = {
+  p: 123
+};
+
+obj.hasOwnProperty('p') // true
+obj.hasOwnProperty('toString') // false
+```
+
+上面代码中，对象obj自身具有p属性，所以返回true。toString属性是继承的，所以返回false。
+
+包装对象
+
+Array（数组）和 Function（函数）本质上都是对象，就连三种原始类型的值 — — Number（数值）、String（字符串）、Boolean（布尔值） — — 在一定条件下，也会自动转为对象，也就是原始类型的包装对象。
 
  
 
@@ -2412,3 +2654,441 @@ var addEvent = (function() {
 同步可以保证顺序一致，但是容易导致阻塞；
 
 异步可以解决阻塞问题，但是会改变顺序性;改变顺序性其实也没有什么大不了的，只不过让程序变得稍微难理解了一些	
+
+
+
+
+
+
+## JSON
+
+### 1、概念
+
+系统已经内置的对象，不需要再存在一个变量里就可以用这个对象（使用这个对象的方法进行转换的时候都是用严格模式进行转换的）
+
+注意：属于特别的方法（IE6/7没有这个对象跟方法的，所以可以在JSON官网下，下载一个JS库来做引用然后就可以兼容）
+
+### 2、方法	
+
+JSON.parse() 把json形式的字符串转换成源生的js代码（安全性高，必须是严格模式的）
+
+JSON.stringify() 把一个对象转换成一段字符串
+
+eval()	可以把任何的字符串转成源生的javascript代码(这个方法是原生的，兼容所有，但是安全性不高)
+
+
+
+
+## 时间
+
+new Date	获取到当前本地时间(全部)
+
++new Date === new Date().getTime()	获取当前时间的毫秒,也就是把时间对象转换成了时间戳
+
+### 1、获取
+
+getFullYear()	年
+
+getMonth()	获取当前月份(0-11,0代表1月),所以 +1
+
+getDate()	获取当前日(1-31)
+
+getDay()	获取当前星期X(0-6,0代表星期天)
+
+getTime() 获取当前时间(从1970.1.1开始的毫秒数)
+
+getHours()	时
+
+getMinutes()	分
+
+getSeconds()	秒
+
+getMilliseconds()	毫秒
+
+### 2、设置（用这些方法会转换成时间戳）
+
+new Date().setFullYear(2015);	设置年份到具体的某一年
+
+new Date().setMonth(4);	设置月份到指定的月
+
+new Date().setDate(20);	设置日期到指定的某一天
+
+
+
+### 3、将时间戳转换成时间格式
+
+	export const formatDate  = (ns) => {
+	  let d = new Date(ns);
+	  let m = d.getMonth() + 1;
+	  let t = d.getDate();
+	  let h = d.getHours();     
+	  let min = d.getMinutes();     
+	  let s = d.getSeconds();  
+	  if (m < 10) {
+	    m = '0' + m.toString()
+	  }
+	  if (t < 10) {
+	    t = '0' + t.toString()
+	  }
+	  let str = d.getFullYear().toString() + "-" + m + "-" + t + " " + h + ":" + min + ":" + s;
+	  return str
+	}
+
+### 4、时间格式(2014-02-02 14:10:00)转换成时间戳
+
+	export const formatTimestamp = (date) => {
+	  var arr = date.replace(/:/g,"-").replace(/ /g,"-").split("-");
+	  var timestamp = new Date(Date.UTC(arr[0],arr[1]-1,arr[2],arr[3]-8,arr[4],arr[5]));
+	  return timestamp.getTime();
+	}
+
+### 5、时间转换公式
+
+	天：Math.floor(t/86400)
+	
+	时：Math.floor(t%86400/3600)
+	
+	分：Math.floor(t%86400%3600/60)
+	
+	秒：t%60
+
+ 
+
+## Math对象
+
+ECMAScript 还为保存数学公式和信息提供了一个公共位置，即 Math 对象。与我们在 JavaScript 直接编写的计算功能相比， Math 对象提供的计算功能执行起来要快得多。 Math 对象中还提供了辅助完成这些计算的属性和方法。
+
+### 1、属性
+
+```
+Math.E
+欧拉常数，也是自然对数的底数, 约等于 2.718.
+
+Math.LN2
+2的自然对数, 约等于0.693.
+
+Math.LN10
+10的自然对数, 约等于 2.303.
+
+Math.LOG2E
+以2为底E的对数, 约等于 1.443.
+
+Math.LOG10E
+以10为底E的对数, 约等于 0.434.
+
+Math.PI
+圆周率，一个圆的周长和直径之比，约等于 3.14159.
+
+Math.SQRT1_2
+1/2的平方根, 约等于 0.707.
+
+Math.SQRT2
+2的平方根,约等于 1.414.
+
+```
+
+### 2、方法
+
+需要注意的是三角函数（sin(), cos(), tan(),asin(), acos(), atan(), atan2()）是以弧度返回值的。可以通过除法（Math.PI / 180）把弧度转换为角度，也可以通过其他方法来转换。
+
+需要注意的是很多数学函数都有一个精度，并且精度在不同环境下也是不相同的。这就意味着不同的浏览器会给出不同的结果，甚至相同的 JS 引擎在不同的OS或者架构下也会给出不同的结果。
+
+-  min() 和 max() 方法
+-  舍入方法
+-  random() 方法
+-  其它方法
+
+使用 Math 的属性和方法的语法：
+        var testMin=Math.min(1,2,3,4,5,6,7);
+
+注释：Math 对象并不像 Date 和 String 那样是对象的类，因此没有构造函数 Math()，像 Math.sin() 这样的函数只是函数，不是某个对象的方法。您无需创建它，通过把 Math 作为对象使用就可以调用其所有属性和方法。
+
+#### 2.1、min() 和 max() 方法
+
+Math.max()	求最大值，参数里面可以传参，然后返回最大值
+
+Math.min()	求最小值，参数里面可以传参，然后返回最小值
+
+    var testMin=Math.min(1,2,3,4,5,6,7),
+    testMax=Math.max(1,2,3,4,5,6,7);
+    
+    console.log(testMin,testMax);//1,7
+
+求下面数组中的最大值，最小值
+
+    var testAry=[1,2,3,4,5,2,43,5,6,7,8,9,34];
+    var testMin=Math.min.apply(null,testAry),
+    testMax=Math.max.apply(null,testAry);
+    
+    console.log(testMin,testMax);//1,43
+
+#### 2.2、舍入方法
+
+Math.ceil()	向上取整,只要有小数(不包括0)就进一位整数
+
+Math.floor()	向下取整,只要有小数就不要小数.保留前面的整数。但如果负数的话,保留数情况相反
+
+Math.round()	小数为四舍五入，方法去保留整数
+
+```
+console.log(Math.ceil(25.9)); //26
+console.log(Math.ceil(25.5)); //26
+console.log(Math.ceil(25.1)); //26
+console.log(Math.round(25.9)); //26
+console.log(Math.round(25.5)); //26
+console.log(Math.round(25.1)); //25
+console.log(Math.floor(25.9)); //25
+console.log(Math.floor(25.5)); //25
+console.log(Math.floor(25.1)); //25
+```
+
+对于所有介于 25 和 26（不包括 26）之间的数值， 
+
+Math.ceil() 始终返回 26，因为它执行的是向上舍入。 
+
+Math.round() 方法只在数值大于等于 25.5 时返回 26；否则返回 25。最后， 
+
+Math.floor()对所有介于 25 和 26（不包括 26）之间的数值都返回 25。
+
+#### 2.3、random
+
+Math.random()	随机出现0到1的（0.几）的小数（指南说有可能为0）公式 Math.random()*k+n n等于起点 k等于目标点减去n
+
+获取0-1之间的随机小数
+
+获取minNum到maxNum之间的随机整数
+Math.round(Math.random()*(maxNum-minNum)+minNum) 
+
+随机显示一些名人名言和新闻事件。套用下面的公式，就可以利用 Math.random()从某个整数范围内随机选择一个值。
+
+    值 = Math.floor(Math.random() * 可能值的总数 + 第一个可能的值)
+
+#### 2.4、其它方法
+
+Math.Pi	返回圆周率（3.141592653无限不循环）
+Math.abs(num)   返回 num 的绝对值
+Math.asin(x)    返回 x 的反正弦值
+Math.exp(num)   返回 Math.E 的 num 次幂
+Math.atan(x)    返回 x 的反正切值
+Math.log(num)   返回 num 的自然对数
+Math.atan2(y,x) 返回 y/x 的反正切值
+Math.pow(num,power) 返回 num 的 power 次幂
+Math.cos(x)     返回 x 的余弦值
+Math.sqrt(num)  返回 num 的平方根
+Math.sin(x)     返回 x 的正弦值
+Math.acos(x)    返回 x 的反余弦值
+Math.tan(x)     返回 x 的正切值
+
+
+
+## 正则表达式
+
+### 1、定义
+
+	var re = new RegExp();//RegExp是一个对象,和Aarray一样  
+	//但这样没有任何效果,需要将正则表达式的内容作为字符串传递进去  
+	re = new RegExp("a");//最简单的正则表达式,将匹配字母a  
+	re = new RegExp("a","i");//第二个参数,表示匹配时不分大小写 
+
+RegExp构造函数第一个参数为正则表达式的文本内容,而第二个参数则为可选项标志，标志可以组合使用
+
+•g （全文查找） 
+•i （忽略大小写） 
+•m （多行查找）
+
+```
+var re = new RegExp("a","gi");//匹配所有的a或A 
+```
+
+正则表达式还有另一种正则表达式字面量的声明方式
+
+```
+var re = /a/gi;  
+```
+
+### 2、方法
+
+正则.test(str)	判断字符串是否有正则匹配到的内容，返回布尔值
+
+str.search(正则)	 检索与正则表达式相匹配的值===返回正则匹配到字符串第一个出现的位置 （ 跟indexof一样匹配失败返回-1 ）
+
+str.match(正则)	找到一个或多个正则表达式的匹配===查找字符串中符合正则表达式匹配的整个的全部内容，并把匹配的结果作为数组对象返回 （匹配失败返回 null 类型）
+
+正则.exec(str)	如上，但是不支持多次,也就是不支持g查找,只返回第一次匹配到的全部内容和所有匹配的子项与匹配到的位置跟拿来匹配的字符串都做为数组返回。
+
+str.split(正则)	把字符串分割为字符串数组===分隔查找到字符串里面符合正则匹配到的为分隔线，把左右两边的数据分隔，然后分别添加到数组，并返回这个数组
+
+正则.compile("新正则")	可以在某个过程中，重新修改正则的规则（有待测试，证实结论2015/2/6/00:30）
+
+str.replace(正则，替换内容)  替换与正则表达式匹配的子串===替换返回被替换后的str,不直接对原有的str进行修改。第2个参数可以是函数(匹配到一次执行一次)，并函数的(a,b,c,d)除a是匹配到全部以外，其他是按照顺序的子项
+
+### 3、详解
+
+	语法
+	
+	//d+|[1234-6^7-9 | abc | /w]/g	
+	
+	找到是数字的，+把连接起来（量词）,g是修饰符，找到全部找完，默认是单找一个(正则特性,懒惰)，|（一样是‘或’的意思）
+	
+	在这个//里，要找到什么就直接写就是找到什么。比如找abc就直接写/abc/,但不会匹配到ab这样的只有满足全部条件abc才会被找到
+	| 的意思就是或者的意思 是一个单竖线
+	()表示的是一个整体，被包的是一个整体的意思,并且从左边到右边，左边第一个被包起来的是整个匹配到的字符串的一个第一个子项
+	[] 里面的也会被解析成只找一位，里面的会被单独拆出来当做一位去查找。也可以说是 | 的意思。不过他的特点是可以用链接式，如 1-9 a-z 就相当于在里面写了 [1到9]
+	^ 在 [] 的意思就是以外的东西，如 ^6-7 等于 67以外的所有,注意，不在【】里面的话，它的意思是行首，字符串开头
+	$ 行尾
+	. 的意思是除了换行的任意字符 （但如果是/.的话 就是真正的符号	.	的意思）
+	i是修饰符，就是匹配的规则不区分大小写
+	
+	/d{2,6}	最少2次，最多6次
+	{2,}	最少2次，最多不限
+	{2}	只能2次
+	*	最少0次，最多不限
+	?	最少0次，最多1次	等同{0,1}
+	+	最少1次，最多不限	等同{1,}
+	
+	(?=要匹配的)	前向申明，意思就是要匹配的必须 跟在 前面的后一位，但是又不要匹配到 被前向申明匹配到的
+	(?!要匹配的)	反前向申明,也就是要匹配的不能在前面的后一位出现，其他的都可以，同样只匹配到前面一位。被申明的都是不会匹配到的，只是要求在后面
+
+### 4、表达运算
+
+	/数字	整个表达式里的第几个子项的指向,也就是/num的这一位必须是子项匹配到的而不是匹配子项的那个条件，如/(a)(b)(c)/1/	那成功的话就要是 abca
+	
+	/d	一个数字
+	/D	非数字
+	/w	数字，字母，下划线
+	/W	非数字，非字母，非下划线
+	/s	空格
+	/S	非空格
+	/b	边界符（这个是看不到的，首先要满足/w的表达）（起始，结束，包括匹配元素前面或后面有空格的话，也会算是开始跟结束，但是匹配的是不能算是空格的）
+	/B	非边界符
+	/f	换页符
+	/n	换行符
+	/r	回车符
+	/t	制符表
+	/v	垂直制符表
+
+
+
+
+## cookie储存 
+
+	1.cookie 的大小是有限制的	
+	2.cookie 的条数是有限制的	
+	3.cookie 可以设置有效期	
+	4.不同浏览器所产生的cookie是不能相同访问	
+	5.只能访问自己域名下的cookie，不能访问其它域名的cookie
+	6.cookie 是一个字符串信息，也只能存放字符串信息	7.有固定格式，一次设置多个的时候值后面+	分号空格 跟下一个要存的区分开来
+	7.默认情况下，当浏览器关闭时，cookie自动失效除非设置了一个未来的过期时间
+
+
+
+## AJAX
+
+### 1、Ajax对象创建
+
+```
+var xhr = new XMLHttpRequest()	
+```
+
+首先要申明AJAX对象 （注意，IE6这个对象没有，并且如果判断的话，也要在前面加上window后拿去判断）new ActiveXObject('Microsoft.XMLHTTP')（IE6里面的插件，去支持AJAX）
+
+并且它有2种方法提交
+
+1.get	通过地址栏的“？”后面传递数据，如果多个数据还会用“&”连接起来。并且会被缓存，传输到后端如果有中文的时候还要进行转URL编码
+
+GET方式提交的地址是会被浏览器缓存的，要解决这个缓存问题就可以在提交数据的时候顺便把时间戳也加到数据的最后一个
+	
+2.post	通过请求头传输,它传输输入是在send方法的时候把输入当参数传过去的。不会被缓存,
+	
+	
+
+无论是ajax还是cookie	在传输带有中文的时候应该先转换成URI编码，可用window下的	encodeURI('string') 方法进行转换，但post传的时候因为申明了请求头，已经进行了转码
+
+对象.responseText 服务器返回的内容就存在这个属性里面(默认string类型)
+
+对象.readyState	Ajax的工作状态（0.初始化。 1.载入，发送请求。 2.载入完成。收到发送的所有请求并返回。 3.解析响应的内容。 4.完成，解析完成,可以继续下面的操作）
+这个方法一般用在	onreadystatechange事件里面 如果状态完成，就可以执行改做的事情了
+
+对象.status	服务器的状态值。（查询 HTTP状态吗 一般为3位数字的数值）（一般为200就是请求到正确的后端文件）（可以确认Ajax的工作是否正常完成了，还是报错）
+
+### 2、属性，方法
+
+对象.open	打开，并传输到指定地址（一：方式(get,post)，二：文件跟get的？的传输，三是否异步）
+
+对象.setRequestHeader('content-type', 'application/x-www-form-urlencoded')	申明发送的数据类型（这一步一般是post方式的时候才需要，get方式不需要）
+
+对象.send()	open是打开的话，send就是确认的意思了。（而且POST提交方式的数据是放到这里来的，数据方式是一样的）
+
+### 3、属性，事件
+
+对象.onreadystatechange	监听Ajax的状态值发生改变的时候触发的事件
+
+
+
+## http协议
+
+
+
+###  1、定义
+
+http协议全称是超文本传输协议，HTTP 协议是以 ASCII 码传输，建立在 TCP/IP 协议之上的应用层规范。规范把 HTTP 请求分为三个部分：状态行、请求头、消息主体。
+
+>最基本的方法有4种，分别是GET，POST，PUT，DELETE
+
+### 2、http状态行、请求头、消息主体
+
+![](images/http.png)
+
+说明： 
+
+	GET override.php表示用get方式请求资源 
+	Accept 表示客户端可以接收任何数据 
+	Accept-Language 页面语言 
+	Accept-Encoding 表示接收什么样的数据压缩格式 Host  主机 
+	User-Agent 告诉我们服务器内核，操作系统 
+	Connection 表示链接方式 不要立即断掉我们的请求 持久连接
+	Referrer  表示我是从哪里来 防盗链 
+	  
+	如果我这个http2.php ， 不希望192.168.0.3的访问在服务器端，我们可以通过一个$_SERVER 来获取我们需要的信息  
+	重要的有： 
+	HTTP_HOST=localhost 
+	REMOTE_ADDR=127.0.0.1 访问该页面的IP 
+	DOCUMENT_ROOT=G:/zhentuan  可以获取apache的主目录 REQUEST_URI=/http2.php 可以获取请求的资源名
+
+### 3、get/post 区别与联系  
+
+	1. 安全性  
+	get请求的数据会显示在地址栏上，post请求的数据放在http协议消息体内 
+	2. 从可以提交的数据的大小来看： 
+	http协议本身并没有限制数据大小 
+	浏览器在对get和post请求做显示， get请求数据2k+35 post请求没有限制 
+	3. Get请求可以更好的添加到收藏夹
+
+### 4、 http响应报文 
+
+	状态行
+	响应头(Response Header)
+	响应正文 
+	Location:http://www.baidu.org/index.php 
+	HTTP/1.1 200 OK                    200 OK表示客户端请求成功 
+	Server:Microsoft-IIs/5.0           表示告诉浏览器 服务器情况 
+	Date:Thu,13 Jul 2000 05:46:53 GMT  告诉浏览器 请求页面的时间 
+	Content-Length 2291                表示回来的数据有2291字节 
+	Content-Type:text/html             文档类型 
+	Cache-control:private              缓存 
+
+### 5、状态码
+
+	200 OK 客户端请求成功
+	301 Moved Permanently 请求永久重定向
+	302 Moved Temporarily 请求临时重定向
+	304 Not Modified 文件未修改，可以直接使用缓存的文件。
+	400 Bad Request 由于客户端请求有语法错误，不能被服务器所理解。
+	401 Unauthorized 请求未经授权。这个状态代码必须和WWW-Authenticate报头域一起使用
+	403 Forbidden 服务器收到请求，但是拒绝提供服务。服务器通常会在响应正文中给出不提供服务的原因
+	404 Not Found 请求的资源不存在，例如，输入了错误的URL
+	500 Internal Server Error 服务器发生不可预期的错误，导致无法完成客户端的请求。
+	503 Service Unavailable 服务器当前不能够处理客户端的请求，在一段时间之后，服务器可能会恢复正常
+
+>2015年，HTTP/2 发布。支持多工（双向的、实时的通信，就叫做多工）
+
