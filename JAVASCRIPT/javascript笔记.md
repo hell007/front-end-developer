@@ -184,7 +184,7 @@ cells	列，节点(复数，所以有下标)
 	并且为了防钓鱼网站，就可以在window.onload的时候 判断一下 window.top是不是我当前域名下的最顶层：如下
 	
 	if(window = window.top){
-	window.top.location.href = window.location.href
+		window.top.location.href = window.location.href
 	}
 
 
@@ -288,7 +288,7 @@ null 空值
 	200+ '3'	变成字符串了
 	!100	取反，！，就是取反，一般取的都是布尔值
 	如果是 == 全等 或者 ===强等的话， '2'==2;是真，比的是里面的,'2' === 2;为假，强等判断所有条件类型都要一样
-		
+
 
 
 
@@ -339,35 +339,198 @@ null 空值
 
 ​	
 
-## 数组
+## Array 数组类
+
+除了 Object 之外， Array 类型恐怕是 ECMAScript 中最常用的类型了。而且，ECMAScript 中的数组与其他多数语言中的数组有着相当大的区别。虽然 ECMAScript 数组与其他语言中的数组都是数据的有序列表，但与其他语言不同的是，ECMAScript 数组的每一项可以保存任何类型的数据。也就是说，可以用数组的第一个位置来保存字符串，用第二位置来保存数值，用第三个位置来保存对象，以此类推。而且，CMAScript 数组的大小是可以动态调整的，即可以随着数据的添加自动增长以容纳新增数据。
 
 ### 1、数组的定义
 
+#### 1.1、构造函数模式
+
 ```
-	var arr = new Array();	
-	var arr = [];
+var colors = new Array("red", "blue", "green"); 
+//创建一个包含 3 项，即字符串red", "blue", "green"的数组
+
+var colors = new Array(3); 
+// 创建一个包含 3 项的数组，实际项目中，很少有人这么写；
+
+var colors = Array("red", "blue", "green"); 
+//构造函数的new是可以省略的；
 ```
-### 2、数组的方法
 
-#### 2.1、 es5方法
+#### 1.2、数组籽棉量表示法
 
-.unshift()	往数组前面添加（IE6,7的返回值是未定义正常的是新的长度）
+数组字面量由一对包含数组项的方括号表示，多个数组项之间以逗号隔开
 
-.push()	往数组最后一位添加
+    var colors = ["red", "blue", "green"]; 
+    // 创建一个包含 3 个字符串的数组
+    
+    var names = []; 
+    // 创建一个空数组
+    
+    var values = [1,2,]; 
+    // 不要这样！这样会创建一个包含 2 或 3 项的数组
+    
+    var options = [,,,,,]; 
+    // 不要这样！这样会创建一个包含 5 或 6 项的数组
 
-.shift()	删除数组第一个,返回被删除的那个.不接收参数，方法只删除一个
 
-.pop()	删除数组最后一个，如上
+在 IE 中， values 会成为一个包含 3 个项且每项的值分别为 1、2 和 undefined 的数组；在其他浏览器中， values 会成为一个包含 2项且值分别为1 和 2 的数组。原因是 IE8 及之前版本中的 ECMAScript 实现在数组字面量方面存在 bug。由于这个 bug导致的另一种情况如最后一行代码所示，该行代码可能会创建包含 5 项的数组（在 IE9+、Firefox、Opera、Safari 和 Chrome 中），也可能会创建包含 6 项的数组（在 IE8 及更早版本中）。在像这种省略值的情况下，每一项都将获得 undefined 值；这个结果与调用 Array 构造函数时传递项数在逻辑上是相同的。但是由于 IE 的实现与其他浏览器不一致，因此强烈建议不要使用这种语法。
 
-.splice(0,1)	全能方法，参数1为(起始位置,包括),参数2为(删除位置,不包括),如果后面还有参数都是添加或替换的意思,返回删除的东西,同时会修改调用这个方法的数组
+在读取和设置数组的值时，要使用方括号并提供相应值的基于 0 的数字索引，如下所示：**数组的索引是以0开始的,一定要注意**
 
-.sort()	排序,对数组进行简单的排序,它取的是数组每个里面内容的第一个的内容进行字符串编码，然后对比字符串编码的大小改变排序，参数也可以传一个函数函数的(a,b)可以进行打乱排序
+            var colors = ["red", "blue", "green"]; // 定义一个字符串数组
+            console.log(colors[0]); // 显示第一项,可以思考下，如果访问的索引超过数组长度呢？会返回什么
+            colors[2] = "black"; // 修改第三项
+            colors[3] = "brown"; // 新增第四项,如果设置某个值的索引超过了数组现有项数,数组就会自动增加到该索引值加 1 的长度（就这个例子而言，索引是 3，因此数组长度就是 4）
 
-.concat()	把2个或多个数组连接成一个新的数组，如，数组对象.concat(另外的数组)
+### 2、数组的length属性
 
-.reverse()	把数组里的顺序颠倒过来
+数组的项数保存在其 length 属性中，这个属性始终会返回 0 或更大的值，如下面这个例子所示：
 
-#### 2.2、es6数组新增方法
+    var colors = ["red", "blue", "green"]; // 创建一个包含 3 个字符串的数组
+    var names = []; // 创建一个空数组
+    console.log(colors.length); //3
+    console.log(names.length); //0
+
+数组的 length 属性很有特点——它不是只读的。因此，通过设置这个属性，可以从数组的末尾移除项或向数组中添加新项。
+
+```
+var colors = ["red", "blue", "green"];  // 创建一个包含 3 个字符串的数组
+colors.length = 2;
+console.log(colors[2]);                 //undefined，此时的colors数组已经被改变了；数组 colors 一开始有 3 个值。将其 length 属性设置为 2 会移除最后一项（位置为2 的那一项），结果再访问 colors[2] 就会显示 undefined 了。
+colors.length = 10;
+console.log(colors[9]);                 //undefined,虽然 colors 数组包含 2 个项，但把它的 length 属性设置成了 10。这个数组不存在位置 9，所以访问这个位置的值就得到了特殊值 undefined 。
+```
+
+利用 length 属性也可以方便地在数组末尾添加新项
+
+```
+var colors = ["red", "blue", "green"]; // 创建一个包含 3 个字符串的数组
+colors[colors.length] = "black"; // （在位置 3 ）添加一种颜色
+colors[colors.length] = "brown"; // （在位置 4 )再添加一种颜色
+```
+
+ > 由于数组最后一项的索引始终是 length-1 ，因此下一个新项的位置就是 length 。每当在数组末尾添加一项后，其 length 属性都会自动更新以反应这一变化。
+
+**数组中的小技巧**
+
+ 获取或者修改数组的长度，例如：ary.length=ary.length-1就是删除数组的最后一项；数组中的splice相对来说实现删除的时候，每删除一项后面的索引都需要重新的计算，比较耗费性能，如果要删除数组中所谓为n这一项，我们可以这样去写；          
+
+    ary[n]=ary[ary.length-1];//首先把数组的最后一项替换当前的项
+    ary.length=ary.length-1;//然后在删除数组的最后一项
+
+### 3、数组的方法
+
+#### 3.1、es5方法
+
+.push 向数组末尾增加新元素，返回新增后数组的长度，原有的数组改变；
+
+```
+var ary=[];
+ary.push(12);
+```
+
+.pop 删除数组末尾的元素，返回删除的内容，原有的数组改变；
+
+```
+var ary=[1，2，3，4];
+ary.pop();
+```
+
+.shift 删除数组第一位元素，返回删除后的内容，原有的数组改变；
+
+```
+var ary=[1，2，3，4];
+ary.shift();
+```
+
+.unshift 向数组开头增加新元素，返回新增后数组的长度，原有的数组改变（IE6,7的返回值是未定义正常的是新的长度）；
+
+```
+var ary=[];
+ary.unshift(12);
+```
+
+.splice
+
+​	splice(n,m)   从索引n开始删除m个元素，把删除的部分当作新数组返回，原有的数组改变
+
+​	splice(n,m,x) 从索引n开始删除m个元素，把删除的部分当作新数组返回，并且用x替换原来位置的内容，原有的数组改变
+
+​	splice(n,0,x) 把x添加到指定索引n之前；
+
+.slice
+
+​	slice(n,m)    从索引n开找到索引m处(不包含m)，将找到的内容放到新数组返回，原有的数组不变
+
+​	slice(n)      从索引n处一直找到数组末尾；
+
+​	slice(0)      数组克隆
+
+.concat        基于当前数组中所有项创建新数组,原有数组不变
+
+ary1.concat() 相当于slice(0)也是克隆数组
+
+```
+var color = ['red','green']
+var color2 = colors.concat("yellow",["black","brown"])
+```
+
+.join      将数组按照指定的分隔符拆分字符串，原有的数组不变
+
+.toString  将数组转化为字符串，原有的数组不变
+
+.sort      数组排序的方法，原有数组改变，我们通常这样写，
+
+```
+ary.sort(function(a,b){return a-b;});来实现数组的升序排列 
+```
+
+.reverse    将数组倒过来排序，原来数组改变
+
+.indexOf / lastIndexOf 获取数组中某一项的索引，通常用来检测数组中是否包含某一项内容，不包含返回的是-1；这个方法在IE678下不兼容；
+
+.forEach   循环数组中每一项，然后进行相关的操作，这个方法在IE678不兼容，
+
+```
+ary.forEach(function(item,index,input){},cantext);
+第二个参数是指定函数中的this，不写默认是window
+```
+
+.map    循环数组中的每一项，然后进行相关的操作，相对于forEach来说，map有返回值，可以修改数组中某一项，IE678不兼容，
+
+```
+ary.map(function(item,index,input){},cantext);第二个参数是指定函数中的this，不写默认是window
+```
+
+.some  是对数组中每一项运行指定函数，如果该函数对**任一项**返回true，则返回true
+
+```
+ary.some(function(item){})
+```
+
+.every 是对数组中每一项运行给定函数，如果该函数对**每一项**返回true,则返回true
+
+```
+ary.every(function(item){})
+```
+
+.filter 创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素
+
+```
+ary.filter(function(item){})
+```
+
+对数组中的每个元素都执行一次指定的函数（callback），并且创建一个新的数组，该数组元素是所有回调函数执行时返回值为true的原数组元素
+
+filter()不会对空数组进行检测
+
+filter()不会改变原始数组
+
+
+
+#### 3.2、es6数组新增方法
 
 .find 参数为回调函数，回调函数可以接收3个参数，值x、索引i、数组arr，回调函数默认返回值x
 
@@ -453,7 +616,6 @@ Array.from(obj,fn) 可以把带有lenght属性类似数组的对象转换为数�
 	})
 
 
-​	
 
 ## 事件
 
@@ -560,48 +722,6 @@ W3C规范中定义了3个事件阶段，依次是捕获阶段、目标阶段、�
 
 
 
-## 图片预加载
-
-通过 new images() 这个对象预加载src, 然后这个对象的onload事件完成的时候换下一张要预加载的图片的url
-
-```
-oimages = new images();
-oimages.src = url;
-oimages.onload = function(){
-	console.log('aready load');
-}
-```
-
-
-
-
-## Math
-
-### 1、数学方法
-
-Math.ceil()	向上取整,只要有小数(不包括0)就进一位整数
-
-Math.floor()	向下取整,只要有小数就不要小数.保留前面的整数。但如果负数的话,保留数情况相反
-
-Math.round()	小数为四舍五入，方法去保留整数
-
-Math.random()	随机出现0到1的（0.几）的小数（指南说有可能为0）公式 Math.random()*k+n n等于起点 k等于目标点减去n
-
-Math.max()	求最大值，参数里面可以传参，然后返回最大值
-
-Math.min()	求最小值，参数里面可以传参，然后返回最小值
-
-Math.abs()	返回绝对值
-
-Math.Pi	圆周率（3.141592653无限不循环）
-
-Math.pow()	平方数(第一参数为一个数字，第2参数为这个数字的多少平方)
-
-Math.sqrt()	开方(参数为一个)平方的逆运算
-
-
-
-
 ## JSON
 
 ### 1、概念
@@ -695,6 +815,8 @@ new Date().setDate(20);	设置日期到指定的某一天
 	秒：t%60
 
  
+
+
 
 ## 正则表达式
 
@@ -1603,15 +1725,15 @@ p.test3()//test3
 
 
 ​	
-	function aaa(){
-		var a = 0;
-		
-		function bbb(){
-			alert(a);
-		};
-		return bbb;
-	};
-	
+​	function aaa(){
+​		var a = 0;
+​		
+​		function bbb(){
+​			alert(a);
+​		};
+​		return bbb;
+​	};
+​	
 	var c = aaa();
 	c();
 
@@ -1635,14 +1757,14 @@ p.test3()//test3
 
 
 ​	 
-	var ss = (function (){	//模块化
-		var a = 1;	//里面的所谓的全局变量其实也就是相当于模块化的成员
-		
-		return function(){
-			a++;
-			alert(a);
-		};
-	
+​	var ss = (function (){	//模块化
+​		var a = 1;	//里面的所谓的全局变量其实也就是相当于模块化的成员
+​		
+​		return function(){
+​			a++;
+​			alert(a);
+​		};
+​	
 	})()
 
 ### 2、闭包的特性
@@ -1863,8 +1985,8 @@ example
 
 
 ​	
-	//demo.js
-	import {kArticleList,isEmptyObject} from './utils.js'
+​	//demo.js
+​	import {kArticleList,isEmptyObject} from './utils.js'
 
 
 ​	
@@ -1877,47 +1999,6 @@ example
 	import any from './utils.js'
 	
 	console.log(any) // kArticleList
-
-
-
-
-## js 作用链调用（不是很懂）
-
-	function add(n) {
-		//使用了闭包，在fn中记住了n的值，第一次调用add(),初始化了fn，
-		//并将n保存在fn的作用链中，然后返回fn  
-	  var fn = function(m) {
-	  	return add(n + m);
-	  	//或者
-	  	//n = n+m;
-	  	//return fn;
-	  };
-		
-	  //重写fn的toString和valueOf方法，返回n的值  
-	  fn.valueOf = function() {
-	    return n;
-	  };
-	
-	  fn.toString = function() {
-	    return '' + n;
-	  };
-	
-	  return fn;
-	}
-	
-	console.log(+add(1)) // 结果 1
-	console.log(+add(1)(2))  // 结果 3
-	console.log(+add(1)(2)(3))  // 结果 6
-	console.log(+add(1)(2)(3)(4))  // 结果 10
-	console.log('' +add(1)(2)(3)(4))  // 结果 "10"
-
-因为是链式调用，所以返回值肯定是一个函数，这个函数我们记为fn。
-
-这个fn就是下一次调用的函数，当然它还是会返回一个函数，显然这个函数跟fn的结构是完全一样的。但是如果这样一直写下去，你要写无数次。所以呢，直接返回add就可以了，有点类似递归。
-
-而且，第二次调用add时需要把之前的结果累加进去，所以是add(m + n)，“加法”就是在这一步实现的。
-
-既然每次都返回一个函数，那么怎样把计算结果取出来呢？我们把返回值函数的toString和valueOf方法重写了，让它们返回和。这是因为对象(函数也是一种对象)在转为原始类型时，会调用自身的toString和(或)valueOf方法。这样以来，就可以把结果用在表达式中了
 
 
 
@@ -1966,6 +2047,297 @@ function range(m,n){
 
 console.log(range(5,3))
 ```
+
+
+
+## js 函数柯里化
+
+函数柯里化在JavaScript中其实是高阶函数（可以作为参数传递，或作为返回值）的一种应用。
+
+### 1、概念
+
+函数柯里化：在数学和计算机科学中，柯里化是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术。
+
+举例来说，一个接收3个参数的普通函数，在进行柯里化后， 柯里化版本的函数接收一个参数并返回接收下一个参数的函数， 该函数返回一个接收第三个参数的函数。 最后一个函数在接收第三个参数后， 将之前接收到的三个参数应用于原普通函数中，并返回最终结果。
+
+```
+//等待实现函数柯里化,也叫反柯里化（普通函数）
+function add(a, b, c) {
+    return a + b + c;
+};
+console.log('add===',add(1,2,3))
+
+//最简单的实现函数柯里化
+var add = function(x) {
+  return function(y) {
+    return function(z) {
+      return x + y + z;
+    }
+  }
+}
+
+var add1 = add(1);
+var add2 = add1(2);
+var add3 = add2(3);
+
+console.log(add(1)(2)(3));
+
+//es6实现函数柯里化
+const add = x => y => z => x + y + z;
+```
+
+对于已经柯里化后的 add 函数来说，当接收的参数数量与原函数的形参数量相同时，执行原函数； 当接收的参数数量小于原函数的形参数量时，返回一个函数用于接收剩余的参数，直至接收的参数数量与形参数量一致，执行原函数。
+
+### 2、函数柯里化公式
+
+以下几个公式（左边是普通函数，右边就是转化后柯里化函数支持的调用方式）
+
+```
+// 公式类型一
+fn(a,b,c) => fn(a)(b)(c);
+fn(a,b,c) => fn(a, b)(c);
+fn(a,b,c) => fn(a)(b, c);
+
+// 公式类型二
+fn(a,b,c) => fn(a)(b)(c)();
+fn(a,b,c) => fn(a);fn(b);fn(c);fn();
+```
+
+#### 2.1、两种公式类型的区别 
+
+函数触发执行的机制不同：
+
+```
+公式一当传入参数等于函数参数数量时开始执行；
+公式二当没有参数传入时（且参数数量满足）开始执行；
+```
+
+通过公式，我们先来理解这行代码 fn(a)(b)(c)(d), 执行 fn(a) 时返回的是一个函数，并且支持传参。何时返回目标函数结果值而不是函数的触发机制，控制权在我们手里，我们可以为函数制定不同的触发机制。
+
+普通的函数调用，一次性传入参数就执行。而通过柯里化，它可以帮我们实现函数部分参数传入执行（并未立即执行原始函数，钱没存够接着存）。
+
+> 函数柯里化的特点："延迟执行和部分求值"。
+
+
+
+#### 2.2、实例
+
+- 类型一
+
+```
+// add原函数
+const add = (a, b, c) => {
+    return a + b + c
+}
+// add实现柯里化
+let sum = curry(add)
+let total1 = sum(1)(2)(3);
+let total2 = sum(1, 2)(3);
+let total3 = sum(1, 2, 3);
+console.log('total==', total1, total2, total3)
+
+
+/**
+ * 将函数柯里化
+ * @param fn 待柯里化的原函数
+ * @param len 所需的参数个数，默认为原函数的形参个数
+ */
+function curry(fn, len = fn.length) {
+	return _curry.call(this, fn, len)
+}
+
+/**
+ * 中转函数
+ * @param fn 待柯里化的原函数
+ * @param len 所需的参数个数
+ * @param args 已接收的参数列表
+ */
+function _curry(fn, len, ...args) {
+	return function (...params) {
+ 		let _args = [...args, ...params];
+ 		//console.log(len, _args.length, _args)
+    if(_args.length >= len){
+    	//参数数量满足原始函数数量，触发执行原函数
+    	return fn.apply(this, _args);
+    }else{
+    	//参数数量不满足原始函数数量，返回curry函数
+     	return _curry.call(this, fn, len, ..._args)
+    }
+ 	}
+}
+```
+
+- 类型二
+
+```
+// add原函数
+const add = (a, b, c) => {
+    return a + b + c
+}
+// add实现柯里化
+let sum = curry(add)
+let total1 = sum(1)(2)(3)();
+let total2 = sum(1);sum(2);sum(3);sum();//调用有问题
+console.log('total==', total1, total2)
+
+
+/**
+ * 将函数柯里化
+ * @param fn 待柯里化的原函数
+ * @param len 所需的参数个数，默认为原函数的形参个数
+ */
+function curry(fn, len = fn.length) {
+  return _curry.call(this, fn, len)
+}
+
+/**
+ * 中转函数
+ * @param fn 待柯里化的原函数
+ * @param len 所需的参数个数
+ * @param args 已接收的参数列表
+ */
+function _curry(fn, len, ...args) {
+  return function (...params) {
+    let _args = [...args, ...params];
+    //console.log(len, params.length, _args.length)
+    if(params.length > 0 || _args.length < len){
+      return _curry.call(this, fn, len, ..._args)
+    }else{
+      return fn.apply(this, _args)
+    }
+  }
+}
+```
+
+为实现公式中不同的两种调用公式，两个_curry方法制定了两种不同的触发机制。
+
+> 记住一个点，函数触发机制可根据需求自行制定。
+
+
+
+#### 2.3、偏函数与柯里化的区别
+先上个公式看对比：
+
+```
+// 函数柯里化：参数数量完整
+fn(a,b,c) => fn(a)(b)(c);
+fn(a,b,c) => fn(a,b)(c);
+
+// 偏函数：只执行了部分参数
+fn(a,b,c) => fn(a);
+fn(a,b,c) => fn(a, b);
+```
+
+函数柯里化中，当你传入部分参数时，返回的并不是原始函数的执行结果，而是一个可以继续支持后续参数的函数。
+
+而偏函数的调用方式更像是普通函数的调用方式，只调用一次，它通过原始函数内部来实现不定参数的支持。
+
+```
+// 偏函数
+const partialAdd = (a = 0, b = 0, c = 0, d = 0) => {
+  return a + b + c +d;
+}
+
+console.log(partialAdd(6))//6
+console.log(partialAdd(2,3))//5
+```
+
+
+
+### 3、柯里化的优缺点
+
+#### 3.1、柯里化的特点
+
+```
+参数复用（固定易变因素）
+延迟执行
+提前返回
+```
+
+#### 3.2、柯里化的缺点
+```
+柯里化是牺牲了部分性能来实现的，可能带来的性能损耗：
+存取 arguments 对象要比存取命名参数要慢一些，老版本浏览器在 arguments.lengths 的实现相当慢(新版本浏览器忽略);
+fn.apply() 和 fn.call() 要比直接调用 fn() 慢;
+大量嵌套的作用域和闭包会带来开销，影响内存占用和作用域链查找速度;
+```
+
+### 4、柯里化的应用
+
+柯里化实际是把简答的问题复杂化了，但是复杂化的同时，我们在使用函数时拥有了更加多的自由度。 而这里对于函数参数的自由处理，正是柯里化的核心所在。 柯里化本质上是降低通用性，提高适用性。
+
+```
+利用柯里化制定约束条件，管控触发机制
+处理浏览器兼容（参数复用实现一次性判断）
+函数节流防抖（延迟执行）
+ES5前bind方法的实现
+```
+
+
+
+#### 4.1、浏览器事件绑定的兼容处理
+
+```
+//普通事件绑定函数
+var addEvent = function(el, type, fn, isCapture) {
+	if(window.addEventListener) {
+		el.addEventListener(type, fn, isCapture)
+	} else if(window.attachEvent) {
+		el.attachEvent(“on” + type, fn)
+	}
+}
+
+//柯里化事件绑定函数
+var addEvent = (function() {
+  if(window.addEventListener) {
+    return function(el, type, fn, isCapture) {
+    	el.addEventListener(type, fn, isCapture)
+    }
+  } else if(window.attachEvent) {
+    return function(ele, type, fn) {
+    	el.attachEvent("on" + type, fn)
+    }
+  }
+})()
+```
+
+优势：判断只执行一次，通过闭包保留了父级作用域的判断结果
+
+
+
+## js 链式调用
+
+    function add(n) {
+      var fn = function(m) {
+        return add(n + m);
+      };
+    
+      fn.valueOf = function() {
+        return n;
+      };
+    
+      fn.toString = function() {
+        return '' + n;
+      };
+    
+      return fn;
+    }
+
+
+因为是链式调用，所以返回值肯定是一个函数，这个函数我们记为fn。
+这个fn就是下一次调用的函数，当然它还是会返回一个函数，显然这个函数跟fn的结构是完全一样的。
+但是如果这样一直写下去，你要写无数次。所以呢，直接返回add就可以了，有点类似递归。
+而且，第二次调用add时需要把之前的结果累加进去，所以是add(m + n)，“加法”就是在这一步实现的。
+既然每次都返回一个函数，那么怎样把计算结果取出来呢？我们把返回值函数的toString和valueOf方法重写了，让它们返回和。
+这是因为对象(函数也是一种对象)在转为原始类型时，会调用自身的toString和(或)valueOf方法。这样以来，就可以把结果用在表达式中了，
+
+例如：
+
+    +add(1) // 结果 1
+    +add(1)(2) // 结果 3
+    +add(1)(2)(3) // 结果 6
+    +add(1)(2)(3)(4) // 结果 10
+    '' + add(1)(2)(3)(4) // 结果 "10"
 
 
 

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>js函数柯里化</title>
+</style>
+</head>
+<body>
+
+</body>
+<script type="text/javascript" charset="utf-8">
+//add实现柯里化
+const add = (a, b, c) => {
+    return a + b + c
+}
+let sum = curry(add)
+let total1 = sum(1)(2)(3)();
+let total2 = sum(1);sum(2);sum(3);sum();
+console.log('total==',  total2)
+
+
+/**
+ * 将函数柯里化
+ * @param fn 待柯里化的原函数
+ * @param len 所需的参数个数，默认为原函数的形参个数
+ */
+function curry(fn, len = fn.length) {
+  return _curry.call(this, fn, len)
+}
+
+/**
+ * 中转函数
+ * @param fn 待柯里化的原函数
+ * @param len 所需的参数个数
+ * @param args 已接收的参数列表
+ */
+function _curry(fn, len, ...args) {
+  return function (...params) {
+    let _args = [...args, ...params];
+    //console.log(len, params.length, _args.length)
+    if(params.length > 0 || _args.length < len){
+      return _curry.call(this, fn, len, ..._args)
+    }else{
+      return fn.apply(this, _args)
+    }
+  }
+}
+
+// 偏函数
+const partialAdd = (a = 0, b = 0, c = 0, d = 0) => {
+  return a + b + c +d;
+}
+
+console.log(partialAdd(6))//6
+console.log(partialAdd(2,3))//5
+
+
+</script>
+</html>
